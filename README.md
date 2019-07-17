@@ -25,3 +25,4 @@ Possible animations to vizualize the data:
   * https://jaumereg.github.io/d3-viz-animated-chord-diagram/
   * https://guyabel.com/post/animated-directional-chord-diagrams/
   * https://flowingdata.com/2015/12/15/a-day-in-the-life-of-americans/
+  * https://mimno.github.io/showcase/project2/got/
