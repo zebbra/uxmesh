@@ -19,4 +19,5 @@ https://github.com/feross/simple-peer (see perf dir for simple perfomance test e
 https://d3js.org/
 https://gist.github.com/d9bf021c395835427aa0.git
 
+Possible animations to vizualize the data:
 https://jaumereg.github.io/d3-viz-animated-chord-diagram/
