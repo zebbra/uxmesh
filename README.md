@@ -21,3 +21,4 @@ https://gist.github.com/d9bf021c395835427aa0.git
 
 Possible animations to vizualize the data:
 https://jaumereg.github.io/d3-viz-animated-chord-diagram/
+https://guyabel.com/post/animated-directional-chord-diagrams/
