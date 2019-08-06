@@ -11,6 +11,9 @@
   <header class="common header">
     <div id="main-info">
       <h1>Network Roundtrips</h1>
+      <div id="chord">
+
+      </div>
     </div>
   </header>
   <section class="common section">
@@ -19,7 +22,28 @@
 
 </div>
 <script>
-  let data = [
+  const source = new EventSource('/events');
+  const mainInfo = document.getElementById('main-info');
+
+  let data = [];
+
+  source.addEventListener('event', function(evt) { //listen to updates from the server
+    const receivedData = JSON.parse(evt.data);
+
+    data = JSON.parse(receivedData);
+
+    // console.log(data);
+    draw(); //draw the diagram again
+
+    mainInfo.style.animation = 'vibrate 1s linear'; //shake it!
+  },false);
+
+  mainInfo.addEventListener('animationend', () => {
+    mainInfo.style.animation = '';
+  });
+
+  //Mocked data for independent frontend testing
+  data = [
     [ 'peer1', 'peer2', 232],
     [ 'peer1', 'peer3', 323],
     [ 'peer1', 'peer4', 324],
@@ -106,22 +130,27 @@
     return getUniqIds(data).reduce((obj, key) => ({ ...obj, [key]: "#" + (Math.random().toString(16) + "000000").slice(2, 8)}), {}) //add for each id a generated color and return a new array
   }
 
-  let idsAndColors = makeColorsForIds(data);
+  function draw() {
+    let idsAndColors = makeColorsForIds(data);
 
-  let ch = viz.ch().data(data)
-          .padding(.01)
-          .innerRadius(380)
-          .outerRadius(400)
-          .duration(1000)
-          .chordOpacity(0.3)
-          .labelPadding(.03)
-          .fill(function(d) { return idsAndColors[d]; });
+    let ch = viz.ch().data(data)
+            .padding(.01)
+            .innerRadius(380)
+            .outerRadius(400)
+            .duration(1000)
+            .chordOpacity(0.3)
+            .labelPadding(.03)
+            .fill(function(d) { return idsAndColors[d]; });
 
-  let width = 1200,
-          height = 1100;
+    let width = 1200,
+            height = 1100;
 
-  let svg = d3.select("header div").append("svg").attr("height", height).attr("width", width);
+    d3.select("#chord").select("svg").remove();
+    let svg = d3.select("#chord").append("svg").attr("height", height).attr("width", width);
 
-  svg.append("g").attr("transform", "translate(600,550)").call(ch);
+    svg.append("g").attr("transform", "translate(600,550)").call(ch);
+  }
+
+
 
 </script>
