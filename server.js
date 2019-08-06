@@ -9,7 +9,7 @@ const io = require('socket.io')(server);
 const pd = require('pretty-data').pd
 
 const DEFAULT_PEER_COUNT = 50;
-app.use(express.static(__dirname));
+app.use(express.static("public"));
 app.get('/js/bundle.js', browserify(['debug', 'lodash', 'socket.io-client', 'simple-peer', {'./client.js': {run: true}}]));
 
 
