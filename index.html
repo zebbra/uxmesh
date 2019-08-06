@@ -1,8 +1,199 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
 <head>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script type="text/javascript" src="viz.js"></script>
 </head>
 <body>
-  <script src="/js/bundle.js"></script>
-</body>
-</html>
+<div class="app">
+  <header class="common header">
+    <div id="main-info">
+      <h1>Network Roundtrips</h1>
+    </div>
+  </header>
+  <section class="common section">
+
+  </section>
+
+</div>
+<script>
+  let data = [
+    [ 'peer1', 'peer2', 232],
+    [ 'peer1', 'peer3', 323],
+    [ 'peer1', 'peer4', 324],
+    [ 'peer1', 'peer5', 123],
+    [ 'peer1', 'peer6', 434],
+    [ 'peer1', 'peer7', 135],
+    [ 'peer1', 'peer8', 335],
+    [ 'peer1', 'peer9', 332],
+    [ 'peer2', 'peer1', 232],
+    [ 'peer2', 'peer3', 34],
+    [ 'peer2', 'peer4', 21],
+    [ 'peer2', 'peer5', 67],
+    [ 'peer2', 'peer6', 11],
+    [ 'peer2', 'peer7', 12],
+    [ 'peer2', 'peer8', 67],
+    [ 'peer2', 'peer9', 69],
+    [ 'peer3', 'peer1', 553],
+    [ 'peer3', 'peer2', 47],
+    [ 'peer3', 'peer4', 89],
+    [ 'peer3', 'peer5', 46],
+    [ 'peer3', 'peer6', 22],
+    [ 'peer3', 'peer7', 31],
+    [ 'peer3', 'peer8', 48],
+    [ 'peer3', 'peer9', 22],
+    [ 'peer4', 'peer1', 332],
+    [ 'peer4', 'peer2', 62],
+    [ 'peer4', 'peer3', 23],
+    [ 'peer4', 'peer5', 57],
+    [ 'peer4', 'peer6', 62],
+    [ 'peer4', 'peer7', 46],
+    [ 'peer4', 'peer8', 98],
+    [ 'peer4', 'peer9', 97],
+    [ 'peer5', 'peer1', 443],
+    [ 'peer5', 'peer2', 32],
+    [ 'peer5', 'peer3', 34],
+    [ 'peer5', 'peer4', 56],
+    [ 'peer5', 'peer6', 34],
+    [ 'peer5', 'peer7', 77],
+    [ 'peer5', 'peer8', 45],
+    [ 'peer5', 'peer9', 43],
+    [ 'peer6', 'peer1', 765],
+    [ 'peer6', 'peer2', 15],
+    [ 'peer6', 'peer3', 66],
+    [ 'peer6', 'peer4', 44],
+    [ 'peer6', 'peer5', 73],
+    [ 'peer6', 'peer7', 43],
+    [ 'peer6', 'peer8', 78],
+    [ 'peer6', 'peer9', 35],
+    [ 'peer7', 'peer1', 453],
+    [ 'peer7', 'peer2', 34],
+    [ 'peer7', 'peer3', 12],
+    [ 'peer7', 'peer4', 67],
+    [ 'peer7', 'peer5', 85],
+    [ 'peer7', 'peer6', 45],
+    [ 'peer7', 'peer8', 63],
+    [ 'peer7', 'peer9', 23],
+    [ 'peer8', 'peer1', 453],
+    [ 'peer8', 'peer2', 13],
+    [ 'peer8', 'peer3', 43],
+    [ 'peer8', 'peer4', 54],
+    [ 'peer8', 'peer5', 67],
+    [ 'peer8', 'peer6', 74],
+    [ 'peer8', 'peer7', 23],
+    [ 'peer8', 'peer9', 25],
+    [ 'peer9', 'peer1', 544],
+    [ 'peer9', 'peer2', 54],
+    [ 'peer9', 'peer3', 87],
+    [ 'peer9', 'peer4', 94],
+    [ 'peer9', 'peer5', 44],
+    [ 'peer9', 'peer6', 36],
+    [ 'peer9', 'peer7', 23],
+    [ 'peer9', 'peer8', 25]
+  ]
+
+  // OLD COLORS
+  // let colors = {
+  //     "Jack": "#da4480",
+  //     "Lucas": "#5ab449",
+  //     "Tiffany": "#7f5acd",
+  //     "Andrew": "#aab740",
+  //     "Figs": "#ce58c0",
+  //     "Jaume": "#50a26e",
+  //     "Paul": "#d1434b",
+  //     "Shane": "#45c0bc",
+  //     "Peter F": "#ce5929",
+  //     "Luis": "#4e7bda",
+  //     "Stephen": "#d49d3c",
+  //     "Peter B": "#6660a3",
+  //     "Ziggy": "#7b853c",
+  //     "Deise": "#b58dde",
+  //     "Ferg": "#97622e",
+  //     "Nick": "#609dd6",
+  //     "John": "#e29074",
+  //     "Brian": "#9c4b88",
+  //     "Kevin": "#ab505f",
+  //     "Mark": "#dc85b6",
+  //     "Mick": "#ab97a0"
+  // };
+
+  // COLORS PALETTE
+  // let colors = {
+  //     "Jack": "#F34336",
+  //     "Lucas": "#E81E63",
+  //     "Tiffany": "#9C27B0",
+  //     "Andrew": "#673AB7",
+  //     "Figs": "#3F51B5",
+  //     "Jaume": "#2196F2",
+  //     "Paul": "#03A9F3",
+  //     "Shane": "#00BCD3",
+  //     "Peter F": "#009688",
+  //     "Luis": "#4CAF50",
+  //     "Stephen": "#8BC24A",
+  //     "Peter B": "#CCDB39",
+  //     "Ziggy": "#FEEA3B",
+  //     "Deise": "#FEC007",
+  //     "Ferg": "#FE9800",
+  //     "Nick": "#FE5722",
+  //     "John": "#795548",
+  //     "Brian": "#9E9E9E",
+  //     "Kevin": "#607D8B",
+  //     "Mark": "#374046",
+  //     "Mick": "#DC85B6"
+  // };
+
+  // SORTED COLORS
+  let colors = {
+    "peer1": "#2196F2",
+    "peer2": "#4CAF50",
+    "peer3": "#D7AFDA",
+    "peer4": "#F34336",
+    "peer5": "#3F51B5",
+    "peer6": "#03A9F3",
+    "peer7": "#FE9800",
+    "peer8": "#C5C3C5",
+    "peer9": "#B78E81",
+    "Luis": "#8BC24A",
+    "Stephen": "#F5C6F4",
+    "Peter B": "#FE5722",
+    "Ziggy": "#DC85B6",
+    "Deise": "#9C27B0",
+    "Ferg": "#673AB7",
+    "Nick": "#FEC007",
+    "John": "#00BCD3",
+    "Brian": "#E81E63",
+    "Kevin": "#009688",
+    "Mark": "#CCDB39",
+    "Mick": "#FEEA3B"
+  };
+
+  let people = [ 'Jack', 'Lucas', 'Tiffany', 'Andrew', 'Figs', 'Jaume', 'Paul', 'Shane', 'Peter F', 'Luis', 'Stephen', 'Peter B', 'Ziggy', 'Deise', 'Ferg', 'Nick', 'John', 'Brian', 'Kevin', 'Mark', 'Mick' ];
+
+  let sortOrder = people.sort();
+
+  // let sortOrder = [
+  //     "Arsenal", "Aston Villa", "Bournemouth", "Chelsea", "Crystal Palace", "Everton", "Leicester City", "Liverpool", "Manchester City", "Manchester Utd", "Newcastle Utd", "Norwich City", "Southampton", "Stoke City", "Sunderland", "Swansea City", "Tottenham", "Watford", "West Bromwich", "West Ham Utd"
+  // ];
+
+  function sort(a, b) { return d3.ascending(sortOrder.indexOf(a), sortOrder.indexOf(b)); }
+
+  let ch = viz.ch().data(data)
+          .padding(.01)
+          .sort(sort)
+          .innerRadius(380)
+          .outerRadius(400)
+          .duration(1000)
+          .chordOpacity(0.3)
+          .labelPadding(.03)
+          .fill(function(d) { return colors[d]; });
+
+  let width = 1200,
+          height = 1100;
+
+  let svg = d3.select("header div").append("svg").attr("height", height).attr("width", width);
+
+  svg.append("g").attr("transform", "translate(600,550)").call(ch);
+
+</script>
