@@ -5,6 +5,7 @@
   "dependencies": {
     "browserify-middleware": "*",
     "debug": "*",
+    "eventemitter3": "^4.0.0",
     "express": "*",
     "lodash": "^4.17.10",
     "prettier-bytes": "*",
