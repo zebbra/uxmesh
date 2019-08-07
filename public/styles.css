@@ -139,15 +139,15 @@ svg .values text {
         transform: translateX(0);
     }
     10%,30%,50%,70% {
-        transform: translateX(-5px);
+        transform: translateX(-4px);
     }
     20%,40%,60% {
-        transform: translateX(5px);
+        transform: translateX(4px);
     }
     80% {
-        transform: translateX(3px);
+        transform: translateX(2px);
     }
     90% {
-        transform: translateX(-3px);
+        transform: translateX(-2px);
     }
 }

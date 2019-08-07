@@ -1,6 +1,6 @@
 let margin = {top: 16, right: 0, bottom: 0, left: 0},
-    width = 950 - margin.left - margin.right,
-    height = 700 - margin.top - margin.bottom;
+    width = 1000 - margin.left - margin.right,
+    height = 900 - margin.top - margin.bottom;
 
 let node_radius = 5,
     padding = 1,
@@ -15,20 +15,25 @@ let svg = d3.select("#chart").append("svg")
 
 // Foci
 let foci = {
-    "toppos": { x: 475, y: 150, color: "#cc5efa" },
-    "leftpos": { x: 225, y: 300, color: "#29bf10" },
-    "rightpos": { x: 725, y: 300, color: "#23cdc7" },
-    "bottompos": { x: 475, y: 450, color: "#eb494f" },
+    "peer1": { x: 475, y: 150, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false },
+    "peer2": { x: 275, y: 150, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false },
+    "peer3": { x: 75, y: 350, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: true },
+    "peer4": { x: 75, y: 550, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false },
+    "peer5": { x: 275, y: 750, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: true },
+    "peer6": { x: 675, y: 750, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false},
+    "peer7": { x: 875, y: 550, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false },
+    "peer8": { x: 875, y: 350, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false },
+    "peer9": { x: 675, y: 150, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false },
 };
 
 // Create node objects
 let nodes = d3.range(0, num_nodes).map(function(o, i) {
     return {
         id: "node" + i,
-        x: foci.toppos.x + Math.random(),
-        y: foci.toppos.y + Math.random(),
+        x: foci.peer1.x + Math.random(),
+        y: foci.peer1.y + Math.random(),
         radius: node_radius,
-        choice: "toppos",
+        choice: "peer1",
     }
 });
 
@@ -36,9 +41,9 @@ let nodes = d3.range(0, num_nodes).map(function(o, i) {
 let force = d3.layout.force()
     .nodes(nodes)
     .size([width, height])
-    .gravity(0)
-    .charge(0)
-    .friction(.91)
+    .gravity(0) // default to .015
+    .charge(0) // default to 0
+    .friction(0.92) // default to .96
     .on("tick", tick)
     .start();
 
@@ -79,6 +84,7 @@ function timer() {
 
     // Run it again in a few seconds.
     timeout = setTimeout(timer, 400);
+
 }
 
 timeout = setTimeout(timer, 400);
@@ -91,23 +97,20 @@ timeout = setTimeout(timer, 400);
 
 function tick(e) {
     circle
-        .each(gravity(.051 * e.alpha))
-        .each(collide(.5))
-        .style("fill", function(d) { return foci[d.choice].color; })
+        .each(gravity(.04, e.alpha))
+        .each(collide(.1))
+        .style("fill", function(d) { return foci[d.choice].color })
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
 }
 
-
 // Move nodes toward cluster focus.
-function gravity(alpha) {
+function gravity(alpha, eAlpha) {
     return function(d) {
-        d.y += (foci[d.choice].y - d.y) * alpha;
-        d.x += (foci[d.choice].x - d.x) * alpha;
+        d.y += (foci[d.choice].y - d.y) * (foci[d.choice].slow ? (0.007 * eAlpha) : (alpha * eAlpha));
+        d.x += (foci[d.choice].x - d.x) * (foci[d.choice].slow ? (0.007 * eAlpha) : (alpha *  eAlpha));
     };
 }
-
-
 
 // Resolve collisions between nodes.
 function collide(alpha) {
