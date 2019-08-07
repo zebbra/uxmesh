@@ -15,19 +15,19 @@ let svg = d3.select("#chart").append("svg")
 
 // Foci
 let foci = {
-    "peer1": { x: 475, y: 150, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false },
-    "peer2": { x: 275, y: 150, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false },
-    "peer3": { x: 75, y: 350, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: true },
-    "peer4": { x: 75, y: 550, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false },
-    "peer5": { x: 275, y: 750, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: true },
-    "peer6": { x: 675, y: 750, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false},
-    "peer7": { x: 875, y: 550, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false },
-    "peer8": { x: 875, y: 350, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false },
-    "peer9": { x: 675, y: 150, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false },
+    "peer1": {x: 475, y: 150, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false},
+    "peer2": {x: 275, y: 150, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false},
+    "peer3": {x: 75, y: 350, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: true},
+    "peer4": {x: 75, y: 550, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false},
+    "peer5": {x: 275, y: 750, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: true},
+    "peer6": {x: 675, y: 750, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false},
+    "peer7": {x: 875, y: 550, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false},
+    "peer8": {x: 875, y: 350, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false},
+    "peer9": {x: 675, y: 150, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false},
 };
 
 // Create node objects
-let nodes = d3.range(0, num_nodes).map(function(o, i) {
+let nodes = d3.range(0, num_nodes).map(function (o, i) {
     return {
         id: "node" + i,
         x: foci.peer1.x + Math.random(),
@@ -51,31 +51,40 @@ let force = d3.layout.force()
 let circle = svg.selectAll("circle")
     .data(nodes)
     .enter().append("circle")
-    .attr("id", function(d) { return d.id; })
+    .attr("id", function (d) {
+        return d.id;
+    })
     .attr("class", "node")
-    .style("fill", function(d) { return foci[d.choice].color; });
+    .style("fill", function (d) {
+        return foci[d.choice].color;
+    });
 
 // For smoother initial transition to settling spots.
 circle.transition()
     .duration(900)
-    .delay(function(d,i) { return i * 5; })
-    .attrTween("r", function(d) {
+    .delay(function (d, i) {
+        return i * 5;
+    })
+    .attrTween("r", function (d) {
         let i = d3.interpolate(0, d.radius);
-        return function(t) { return d.radius = i(t); };
+        return function (t) {
+            return d.radius = i(t);
+        };
     });
 
 
 // Run function periodically to make things move.
 let timeout;
+
 function timer() {
 
     // Random place for a node to go
     let choices = d3.keys(foci);
-    let foci_index = Math.floor( Math.random() * choices.length );
+    let foci_index = Math.floor(Math.random() * choices.length);
     let choice = d3.keys(foci)[foci_index];
 
     // Update random node
-    let random_index = Math.floor( Math.random() * nodes.length );
+    let random_index = Math.floor(Math.random() * nodes.length);
     nodes[random_index].cx = foci[choice].x;
     nodes[random_index].cy = foci[choice].y;
     nodes[random_index].choice = choice;
@@ -84,11 +93,34 @@ function timer() {
 
     // Run it again in a few seconds.
     timeout = setTimeout(timer, 400);
-
 }
 
 timeout = setTimeout(timer, 400);
 
+function getLegendData() {
+    let legendData = [];
+    d3.keys(foci).forEach(key => {
+        legendData.push([key, foci[key].color])
+    });
+    return legendData;
+}
+
+let legend = svg.append('g')
+    .attr('transform', `translate(20, 20)`)
+    .selectAll('g')
+    .data(getLegendData())
+    .enter()
+    .append('g');
+
+legend.append('circle')
+    .attr('fill', d => d[1])
+    .attr('r', 5)
+    .attr('cx', -10)
+    .attr('cy', (d, i) => i * 15 + 50);
+
+legend.append('text')
+    .text(d => d[0])
+    .attr('transform', (d, i) => `translate(10, ${i * 15 + 54})`);
 
 //
 // Force-directed boiler plate functions
@@ -99,29 +131,35 @@ function tick(e) {
     circle
         .each(gravity(.04, e.alpha))
         .each(collide(.1))
-        .style("fill", function(d) { return foci[d.choice].color })
-        .attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; });
+        .style("fill", function (d) {
+            return foci[d.choice].color
+        })
+        .attr("cx", function (d) {
+            return d.x;
+        })
+        .attr("cy", function (d) {
+            return d.y;
+        });
 }
 
 // Move nodes toward cluster focus.
 function gravity(alpha, eAlpha) {
-    return function(d) {
+    return function (d) {
         d.y += (foci[d.choice].y - d.y) * (foci[d.choice].slow ? (0.007 * eAlpha) : (alpha * eAlpha));
-        d.x += (foci[d.choice].x - d.x) * (foci[d.choice].slow ? (0.007 * eAlpha) : (alpha *  eAlpha));
+        d.x += (foci[d.choice].x - d.x) * (foci[d.choice].slow ? (0.007 * eAlpha) : (alpha * eAlpha));
     };
 }
 
 // Resolve collisions between nodes.
 function collide(alpha) {
     let quadtree = d3.geom.quadtree(nodes);
-    return function(d) {
+    return function (d) {
         let r = d.radius + node_radius + Math.max(padding, cluster_padding),
             nx1 = d.x - r,
             nx2 = d.x + r,
             ny1 = d.y - r,
             ny2 = d.y + r;
-        quadtree.visit(function(quad, x1, y1, x2, y2) {
+        quadtree.visit(function (quad, x1, y1, x2, y2) {
             if (quad.point && (quad.point !== d)) {
                 let x = d.x - quad.point.x,
                     y = d.y - quad.point.y,
