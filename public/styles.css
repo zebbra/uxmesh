@@ -108,9 +108,14 @@ svg .values text {
     color: #282c34;
 }
 
-.section {
+.bubble {
     background-color: #282c34;
     color: white;
+}
+
+.stream {
+    background-color: white;
+    color: #282c34;
 }
 
 .databox {
