@@ -14,6 +14,7 @@ let svg = d3.select("#chart").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // Foci
+// TODO: create foci dynamic according to the data provided by the backend
 let foci = {
     "peer1": {x: 475, y: 150, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false},
     "peer2": {x: 275, y: 150, color: "#" + (Math.random().toString(16) + "000000").slice(2, 8), slow: false},
@@ -30,10 +31,11 @@ let foci = {
 let nodes = d3.range(0, num_nodes).map(function (o, i) {
     return {
         id: "node" + i,
-        x: foci.peer1.x + Math.random(),
-        y: foci.peer1.y + Math.random(),
+        x: foci[d3.keys(foci)[0]].x + Math.random(),
+        y: foci[d3.keys(foci)[0]].y + Math.random(),
         radius: node_radius,
-        choice: "peer1",
+        choice: d3.keys(foci)[0],
+        slow: false,
     }
 });
 
@@ -72,9 +74,27 @@ circle.transition()
         };
     });
 
+//TODO: create a function to check if a conncection is slow, by going thru all the report data and check, if the connection between two pairs is slow
+function determineSlowConnection(peer1, peer2) {
+
+    let peerDataFromBackend = JSON.parse(localStorage.getItem("peerDataFromBackend"));
+    let thisConnectionIsSlow = false;
+
+    peerDataFromBackend.forEach(element => {
+        if((element[0] === peer1 && element[1] === peer2) || (element[1] === peer1 && element[0] === peer2))
+            if(element[2] > 200) {
+                console.log("is it ever true? yea!");
+                thisConnectionIsSlow = true;
+            }
+            else
+                thisConnectionIsSlow =  false;
+    });
+    return thisConnectionIsSlow;
+}
 
 // Run function periodically to make things move.
 let timeout;
+let oldChoice;
 
 function timer() {
 
@@ -83,11 +103,18 @@ function timer() {
     let foci_index = Math.floor(Math.random() * choices.length);
     let choice = d3.keys(foci)[foci_index];
 
+    let thisConnectionIsSlow = determineSlowConnection(choice, oldChoice ? oldChoice : '');
+
     // Update random node
     let random_index = Math.floor(Math.random() * nodes.length);
     nodes[random_index].cx = foci[choice].x;
     nodes[random_index].cy = foci[choice].y;
     nodes[random_index].choice = choice;
+    nodes[random_index].slow = thisConnectionIsSlow;
+
+    oldChoice = choice;
+    // TODO: set the property SLOW on the choosen element according to the latency of the two (the old and the new) nodes/peers
+    //  to true or false (pick it from the data which should come from the server. can be same as the one from the chord graph)
 
     force.resume();
 
@@ -100,7 +127,7 @@ timeout = setTimeout(timer, 400);
 function getLegendData() {
     let legendData = [];
     d3.keys(foci).forEach(key => {
-        legendData.push([key, foci[key].color])
+        legendData.push([key, foci[key].color, foci[key].slow])
     });
     return legendData;
 }
@@ -119,20 +146,19 @@ legend.append('circle')
     .attr('cy', (d, i) => i * 15 + 50);
 
 legend.append('text')
-    .text(d => d[0])
-    .attr('transform', (d, i) => `translate(10, ${i * 15 + 54})`);
+    .text(d => d[0] + (d[2] ? ' has low latency!' : ''))
+    .attr('transform', (d, i) => `translate(10, ${i * 15 + 54})`)
+    .attr("class", d => (d[2] ? 'low-latency' : 'regular-latency'));
 
 //
 // Force-directed boiler plate functions
 //
-
-
 function tick(e) {
     circle
         .each(gravity(.04, e.alpha))
         .each(collide(.1))
         .style("fill", function (d) {
-            return foci[d.choice].color
+            return (d.slow ? 'white' : foci[d.choice].color)
         })
         .attr("cx", function (d) {
             return d.x;
@@ -145,8 +171,8 @@ function tick(e) {
 // Move nodes toward cluster focus.
 function gravity(alpha, eAlpha) {
     return function (d) {
-        d.y += (foci[d.choice].y - d.y) * (foci[d.choice].slow ? (0.007 * eAlpha) : (alpha * eAlpha));
-        d.x += (foci[d.choice].x - d.x) * (foci[d.choice].slow ? (0.007 * eAlpha) : (alpha * eAlpha));
+        d.y += (foci[d.choice].y - d.y) * (d.slow ? (0.007 * eAlpha) : (alpha * eAlpha));
+        d.x += (foci[d.choice].x - d.x) * (d.slow ? (0.007 * eAlpha) : (alpha * eAlpha));
     };
 }
 
