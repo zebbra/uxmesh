@@ -8,6 +8,9 @@ source.addEventListener('event', function(evt) { //listen to updates from the se
 
     data = JSON.parse(receivedData);
 
+    //maybe we use it later on or somewhere?
+    localStorage.setItem("peerDataFromBackend", JSON.stringify(data));
+
     // console.log(data);
     draw(); //draw the diagram again
 

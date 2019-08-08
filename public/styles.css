@@ -27,6 +27,17 @@ svg text {
     font-size: 11px;
 }
 
+.low-latency{
+    fill: orangered;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.regular-latency {
+    fill: white;
+    font-size: 11px;
+}
+
 svg .values text {
     pointer-events: none;
     stroke-width: 0.5px;
