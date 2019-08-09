@@ -1,3 +1,4 @@
+;(function() {
 let margin = {top: 16, right: 0, bottom: 0, left: 0},
     width = 1000 - margin.left - margin.right,
     height = 900 - margin.top - margin.bottom;
@@ -7,7 +8,7 @@ let node_radius = 5,
     cluster_padding = 10,
     num_nodes = 200;
 
-let svg = d3.select("#chart").append("svg")
+ let svg = d3.select("#bubble").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -74,7 +75,6 @@ circle.transition()
         };
     });
 
-//TODO: create a function to check if a conncection is slow, by going thru all the report data and check, if the connection between two pairs is slow
 function determineSlowConnection(peer1, peer2) {
 
     let peerDataFromBackend = JSON.parse(localStorage.getItem("peerDataFromBackend"));
@@ -82,8 +82,7 @@ function determineSlowConnection(peer1, peer2) {
 
     peerDataFromBackend.forEach(element => {
         if((element[0] === peer1 && element[1] === peer2) || (element[1] === peer1 && element[0] === peer2))
-            if(element[2] > 200) {
-                console.log("is it ever true? yea!");
+            if(element[2] > 200) { //...or whatever "slow" means...
                 thisConnectionIsSlow = true;
             }
             else
@@ -113,8 +112,6 @@ function timer() {
     nodes[random_index].slow = thisConnectionIsSlow;
 
     oldChoice = choice;
-    // TODO: set the property SLOW on the choosen element according to the latency of the two (the old and the new) nodes/peers
-    //  to true or false (pick it from the data which should come from the server. can be same as the one from the chord graph)
 
     force.resume();
 
@@ -203,3 +200,4 @@ function collide(alpha) {
         });
     };
 }
+})();
