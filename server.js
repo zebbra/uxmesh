@@ -154,9 +154,10 @@ function serverPolling() {
             }
         }
 
+
+
         //mocked Data for
         let data = [
-            // from     to       roundtrip
             ['peer1', 'peer2', 232],
             ['peer1', 'peer3', 323],
             ['peer1', 'peer4', 324],
@@ -231,6 +232,9 @@ function serverPolling() {
             ['peer9', 'peer8', 25]
         ];
 
+
+
+
         //as we generate the report in this interval, we spread it to our subscribers with the emitter.publish function
         emitter.publish(JSON.stringify(data));
 
@@ -239,5 +243,5 @@ function serverPolling() {
         console.log('serverPolling -> ' + e.message);
     }
     //setInterval vs setTimeout: setTimeout executes every "function execution time + given timeout", setInterval executes "every given interval time"
-    setTimeout(serverPolling, 4000);
+    setTimeout(serverPolling, 10000);
 };

@@ -46,7 +46,7 @@ module.exports = class DataChannel {
     this.config = {
       initiator: params.initiator,
       trickle: useTrickle,
-      //channelName: 'network-test',
+      //channelName: process.argv[2],
       channelConfig: {
         ordered: false, // not sure which to use: https://w3c.github.io/webrtc-pc/#dom-rtcdatachannel
         reliable: false,

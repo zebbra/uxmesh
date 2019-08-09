@@ -80,10 +80,6 @@ svg .values text {
     100% { opacity: 1; }
 }
 
-.title {
-    animation: show 2s ease;
-}
-
 #hideshow {
     animation: hideshow 1s ease;
 }
@@ -112,7 +108,7 @@ svg .values text {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: calc(50px + 2vmin);
+    font-size: calc(10px + 2vmin);
 }
 
 .header {
@@ -130,7 +126,7 @@ svg .values text {
 }
 
 .databox {
-    font-size: calc(20px + 2vmin);
+    font-size: calc(15px + 2vmin);
 }
 
 .databox .row {
@@ -148,6 +144,10 @@ svg .values text {
 
 .databox .row .col {
     min-width: 33vw;
+}
+
+#waitingForData {
+
 }
 
 @keyframes vibrate {
