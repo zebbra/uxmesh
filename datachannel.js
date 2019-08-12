@@ -119,7 +119,11 @@ module.exports = class DataChannel {
                 if (this.config.initiator) {
                     try {
                         let starttime = new Date().getTime();
-                        this.peer.send("x".repeat(143) + '|' + starttime);  // more or less RTP
+                        const payload = {
+                            starttime: starttime,
+                            x: 'x'.repeat(100)
+                        }
+                        this.peer.send(JSON.stringify(payload));  // more or less RTP
                     } catch (err) {
                         debug("peer.send error", err, "shutdown")
                         this.shutdown()
@@ -149,19 +153,24 @@ module.exports = class DataChannel {
             // send em back
             if (!this.config.initiator) {
                 try {
-
-                    this.peer.send("" + data);
+                    setTimeout(() => {
+                        this.peer.send("" + data);
+                    }, 200)
                     this.stats.relayed++
                 } catch (err) {
                     debug("peer.send error", err, "shutdown")
                 }
             } else {
-
-                let starttime = parseInt(_.split(data, '|', 2)[1]);
+                const payload = JSON.parse(data)
+                let starttime = payload.starttime;
+                //let starttime = parseInt(_.split(data, '|', 2)[1]);
                 let endtime = new Date().getTime();
-                // console.log('++++ endtime' + _.split(data, '|', 2)[1]);
-                // console.log('++++ starttime' + starttime + ' - endtime' + endtime + ' = ' + (endtime - starttime));
-                this.stats.totaltime = (endtime - starttime);
+                console.log("start", starttime, "now", endtime, "took", endtime-starttime)
+                if(this.stats.totaltime === 0) {
+                    this.stats.totaltime = (endtime - starttime)
+                } else {
+                    this.stats.totaltime = ((endtime - starttime) + this.stats.totaltime*20 ) / 21;
+                }
 
                 this.stats.received++
             }
