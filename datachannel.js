@@ -67,7 +67,7 @@ module.exports = class DataChannel {
         this.stats.sent = 0;
         this.stats.received = 0;
         this.stats.relayed = 0;
-        this.stats.totaltime = 1;
+        this.stats.totaltime = 0;
     }
 
     getReport() {
