@@ -38,7 +38,6 @@ module.exports = class DataChannel {
         this.peerId = params.peerId;
         this.active = true;
         this._initPeer(params);
-        //this._setupReports()
         this._theRest()
     }
 
@@ -114,7 +113,8 @@ module.exports = class DataChannel {
             debug('Error sending connection to peer %s:', this.peerId, e);
         });
         this.peer.on('connect', () => {
-            debug('Peer connection established', "initiator", this.config.initiator) //"channel", peer._channel);
+
+            debug('Peer connection established', "initiator", this.config.initiator); //"channel", peer._channel);
             this.intervalSend = setInterval(() => {
                 if (this.config.initiator) {
                     try {
@@ -125,7 +125,7 @@ module.exports = class DataChannel {
                         }
                         this.peer.send(JSON.stringify(payload));  // more or less RTP
                     } catch (err) {
-                        debug("peer.send error", err, "shutdown")
+                        debug("peer.send error", err, "shutdown");
                         this.shutdown()
                         //break
                     }
@@ -135,6 +135,7 @@ module.exports = class DataChannel {
 
             const knownPeers = {};
             for (let [id, peer] of Object.entries(peers)) {
+
                 knownPeers[id] = {
                     channelName: peer.channelName,
                     localAddress: peer.localAddress,
@@ -143,19 +144,16 @@ module.exports = class DataChannel {
                     remotePort: peer.remotePort
                 }
             }
-            debug("sending connected peers", knownPeers)
+            debug("sending connected peers", knownPeers);
             this.socket.emit('connected', {socketId: this.socket.id, peerId: this.peerId, peers: knownPeers})
         });
         this.peer.on('data', data => {
-            const who = this.config.initiator ? 'initiator' : 'relay'
-            //debug(who + ' recieved data from peer:', data);
+
             speed(data.length);
             // send em back
             if (!this.config.initiator) {
                 try {
-                    setTimeout(() => {
-                        this.peer.send("" + data);
-                    }, 200)
+                    this.peer.send("" + data);
                     this.stats.relayed++
                 } catch (err) {
                     debug("peer.send error", err, "shutdown")
@@ -163,13 +161,12 @@ module.exports = class DataChannel {
             } else {
                 const payload = JSON.parse(data)
                 let starttime = payload.starttime;
-                //let starttime = parseInt(_.split(data, '|', 2)[1]);
                 let endtime = new Date().getTime();
-                console.log("start", starttime, "now", endtime, "took", endtime-starttime)
-                if(this.stats.totaltime === 0) {
+
+                if (!this.stats.totaltime || this.stats.totaltime === 0) {
                     this.stats.totaltime = (endtime - starttime)
                 } else {
-                    this.stats.totaltime = ((endtime - starttime) + this.stats.totaltime*20 ) / 21;
+                    this.stats.totaltime = ((endtime - starttime) + this.stats.totaltime * 20) / 21;
                 }
 
                 this.stats.received++

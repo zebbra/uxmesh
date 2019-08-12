@@ -59,12 +59,10 @@ io.on('connection', socket => {
         }) // console.log("filter", socklist[socket.id].id, socklist[s.id].id);
         .sampleSize(DEFAULT_PEER_COUNT)
         .value();
-    //console.log("bla", peersToAdvertise)
-    //debug('advertising peers', _.map(peersToAdvertise, 'id'));
-    peersToAdvertise.forEach(socket2 => {
-        //debug('Advertising peer %s to %s', socket.id, socket2.id);
-        debug('Advertising peer %s to %s', socklist[socket.id].id, socklist[socket2.id].id);
 
+    peersToAdvertise.forEach(socket2 => {
+
+        debug('Advertising peer %s to %s', socklist[socket.id].id, socklist[socket2.id].id);
         socket2.emit('peer', {
             peerId: socklist[socket.id].id, //socket.id,
             initiator: true
@@ -81,7 +79,6 @@ io.on('connection', socket => {
         if (!socket2) {
             return;
         }
-        //debug('Proxying signal from peer %s to %s', socket.id, socket2.id);
         debug('Proxying signal from peer %s to %s', socklist[socket.id].id, socklist[socket2.id].id);
 
         socket2.emit('signal', {
@@ -96,7 +93,6 @@ io.on('connection', socket => {
         if (!socket2) {
             return;
         }
-        //debug("new webrtc connection details", data)
         debug("new webRTC connection",
             "s", socklist[socket.id].id, "-> s", socklist[socket2.id].id,
             "info peerId: ", data.peerId,
@@ -115,15 +111,14 @@ io.on('connection', socket => {
 
     socket.on('disconnect', data => {
 
-        //io.sockets.connected[socket.id].disconnect()
-        const peerID = socklist[socket.id].id
-        delete socklist_reverse[peerID]
+        const peerID = socklist[socket.id].id;
+        delete socklist_reverse[peerID];
 
-        debug("peer", peerID, "disconnected", data, "remove", socket.id)
-        cleanUp(peerID)
-        delete socklist[socket.id]
+        debug("peer", peerID, "disconnected", data, "remove", socket.id);
+        cleanUp(peerID);
+        delete socklist[socket.id];
         debug("still active", socklist)
-    })
+    });
 
     socket.on('peerDown', cleanUp)
 });
@@ -147,7 +142,6 @@ function serverPolling() {
                     rep.received = stat.received;
                     rep.lost = stat.received - stat.sent;
                     rep.avgRoundtrip = stat.totaltime; //... this is correct! I swear!! ;)
-                    rep.initiator = stat.initiator;
                 } else {
                     rep.relayed = stat.relayed;
                 }
@@ -157,8 +151,8 @@ function serverPolling() {
         let data = []; // [ [peerFrom, peerTo, roundtrip, speed, channel/connectionId, lostPackages, relayed] ]
         _.values(report).forEach(filteredReportElement => {
 
-            let dataEntry1 = ["peer" + filteredReportElement.from, "peer" + filteredReportElement.to, filteredReportElement.avgRoundtrip];//, reportElement.speed, reportElement.channel, reportElement.lost, reportElement.relayed];
-            let dataEntry2 = ["peer" + filteredReportElement.to, "peer" + filteredReportElement.from, filteredReportElement.avgRoundtrip];//, reportElement.speed, reportElement.channel, reportElement.lost, reportElement.relayed];
+            let dataEntry1 = ["peer" + filteredReportElement.from, "peer" + filteredReportElement.to, Math.round(filteredReportElement.avgRoundtrip)];//, reportElement.speed, reportElement.channel, reportElement.lost, reportElement.relayed];
+            let dataEntry2 = ["peer" + filteredReportElement.to, "peer" + filteredReportElement.from, Math.round(filteredReportElement.avgRoundtrip)];//, reportElement.speed, reportElement.channel, reportElement.lost, reportElement.relayed];
             data.push(dataEntry1);
             data.push(dataEntry2);
         });
