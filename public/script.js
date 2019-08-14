@@ -101,8 +101,8 @@ function drawChord(peerDataFromBackend) {
     }
 
     let margin = {left: 20, top: 20, right: 20, bottom: 20},
-        width = Math.min(window.innerWidth, 900) - margin.left - margin.right,
-        height = Math.min(window.innerWidth, 900) - margin.top - margin.bottom,
+        width = Math.min(window.innerWidth, 1000) - margin.left - margin.right,
+        height = Math.min(window.innerWidth, 1000) - margin.top - margin.bottom,
         innerRadius = Math.min(width, height) * .39,
         outerRadius = innerRadius * 1.1;
 
@@ -148,6 +148,7 @@ function drawChord(peerDataFromBackend) {
                 matrix.push(matrixEntry);
             }
         );
+        console.log(matrix);
         return matrix;
     }
 
@@ -349,7 +350,7 @@ function drawChord(peerDataFromBackend) {
             trigger: 'hover',
             html: true,
             content: function () {
-                return "<p style='font-size: 11px; text-align: center;'>the roundtrip between <span style='font-weight:900'>" + names[d.source.index] +
+                return "<p style='font-size: 11px; text-align: center;'>the average roundtrip between <span style='font-weight:900'>" + names[d.source.index] +
                     "</span> and <span style='font-weight:900'>" + names[d.target.index] +
                     "</span> is currently <span style='font-weight:900'>" + d.source.value + "</span>ms</p>";
             }
