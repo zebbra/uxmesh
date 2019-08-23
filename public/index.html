@@ -23,8 +23,12 @@
   <script src="bootstrap.popover.js"></script>
 
   <script src="d3.layout.chord.sort.js"></script>
+  <script src="chart-utilities.js"></script>
 </head>
 <body>
+<div id="sidenav">
+  <p>active peers:</p>
+</div>
 <div class="app">
   <header class="common header">
     <div id="main-info">
@@ -42,8 +46,9 @@
   </section>
   <section class="common stream">
     <div>
-      <div>
-
+      <div id="realtime">
+        <div>network roundtrip average over time</div>
+        <svg></svg>
       </div>
     </div>
   </section>
@@ -55,30 +60,49 @@
   const source = new EventSource('/events');
   const chart = document.getElementById('chart');
 
-  let data = [];
+  let data = JSON.parse(localStorage.getItem('peerDataFromBackend')) || [];
 
-  source.addEventListener('event', function(evt) { //listen to updates from the server
-    const receivedData = JSON.parse(evt.data);
+  let globalColors = {};
+  let globalIdsWithSpeed = {};
 
-    data = JSON.parse(receivedData);
+  function setupEventListener() {
+    source.addEventListener(
+            'event',
+            function(evt) {
+              //listen to updates from the server
+              const receivedData = JSON.parse(evt.data)
 
-    //maybe we use it later on or somewhere?
-    localStorage.setItem("peerDataFromBackend", JSON.stringify(data));
+              data = JSON.parse(receivedData)
 
-    d3.select("#waitingForData").remove();
-    d3.select("#chart").select("svg").remove();
-    drawChord(data);
+              localStorage.setItem('peerDataFromBackend', JSON.stringify(data))
 
-    chart.style.animation = 'vibrate 1s linear'; //shake it!
-  },false);
+              generateColors(data)
+              buildIdsWithSpeed(data)
+              buildLegend(data)
 
+              d3.select('#waitingForData').remove()
+              d3.select('#chart')
+                      .select('svg')
+                      .remove()
+              drawChord(data)
+
+              chart.style.animation = 'vibrate 1s linear' //shake it!
+            },
+            false
+    )
+  }
   chart.addEventListener('animationend', () => {
-    chart.style.animation = '';
-  });
+    chart.style.animation = ''
+  })
+
+  setupEventListener();
+  generateColors(data);
+  buildIdsWithSpeed(data);
+  buildLegend(data);
 
 </script>
 <script src="script.js"></script>
-
 <script src="bubble.js"></script>
+<script src="realtime.js"></script>
 </body>
 </html>

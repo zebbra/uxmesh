@@ -164,9 +164,9 @@ module.exports = class DataChannel {
                 let endtime = new Date().getTime();
 
                 if (!this.stats.totaltime || this.stats.totaltime === 0) {
-                    this.stats.totaltime = (endtime - starttime)
+                    this.stats.totaltime = (endtime - starttime);
                 } else {
-                    this.stats.totaltime = ((endtime - starttime) + this.stats.totaltime * 20) / 21;
+                    this.stats.totaltime = ((endtime - starttime) +  this.stats.totaltime * 20) / 21;
                 }
 
                 this.stats.received++
