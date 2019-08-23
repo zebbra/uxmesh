@@ -1,6 +1,4 @@
 
-Middleware to abstract SIP communication
-
 usage:
 
 ```

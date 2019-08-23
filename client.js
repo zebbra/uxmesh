@@ -5,7 +5,7 @@ require('debug').enable('client')
 const DataChannel = require('./datachannel')
 const io = require('socket.io-client');
 const debug = require('debug')('client');
-const socket = io.connect(process.argv[2] || 'http://192.168.10.108:3001'); // FIXME
+const socket = io.connect(process.argv[2] || 'http://localhost:3001'); // FIXME
 let datachannels = [];
 
 socket.on('connect', () => {

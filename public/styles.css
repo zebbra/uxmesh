@@ -18,24 +18,39 @@ h3 {
     margin-top: 0;
 }
 
-svg {
-    margin: -60px -80px;
-}
+/*svg {*/
+/*    margin: -60px -80px;*/
+/*}*/
 
 svg text {
     fill: grey;
     font-size: 11px;
 }
 
+#sidenav {
+    font-family: monospace;
+    width: 160px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #282c34;
+    border: 1px solid white;
+    border-radius: 5px;
+    color: white;
+    overflow-x: hidden;
+    padding: 5px;
+}
+
 .low-latency{
     fill: orangered;
-    font-size: 12px;
+    font-size: 15px;
     font-weight: bold;
 }
 
 .regular-latency {
     fill: white;
-    font-size: 11px;
+    font-size: 15px;
 }
 
 svg .values text {
@@ -148,6 +163,30 @@ svg .values text {
 
 #waitingForData {
 
+}
+
+#realtime  .axis {
+    stroke-width: 2;
+}
+
+#realtime .axis .tick line {
+    stroke: black;
+}
+
+#realtime .axis .tick text {
+    fill: black;
+    font-size: 0.5em;
+}
+
+#realtime .axis .domain {
+    fill: none;
+    stroke: black;
+}
+
+#realtime .group {
+    fill: none;
+    stroke: black;
+    stroke-width: 4;
 }
 
 @keyframes vibrate {
