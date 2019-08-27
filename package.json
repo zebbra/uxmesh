@@ -18,7 +18,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
+    "client": "node client.js",
+    "server": "node server.js",
     "update:packages": "node ./lib/wipe-dependencies.js && rm -rf node_modules && npm update --save-dev && npm update --save",
     "lint": "./node_modules/.bin/eslint *.js"
   },

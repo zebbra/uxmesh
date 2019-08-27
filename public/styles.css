@@ -161,8 +161,8 @@ svg .values text {
     min-width: 33vw;
 }
 
-#waitingForData {
-
+.waitingForData {
+    font-size: 10px;
 }
 
 #realtime  .axis {
