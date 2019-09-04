@@ -11,20 +11,15 @@ to
 #### the server
 + the server to agregate data received from clients
 
-
-
-## setup and run client
-### for command line execution
+## setup and run the server
+### run the server on the command line
+prerequisites:
 prerequisites:
 --> install node in version 10.x or higher
 ```
 brew install node
-```
-```
 npm install
 ```
-
-#### run the client on the command line
 with debug output:
 ```
 DEBUG=* npm run server
@@ -33,23 +28,26 @@ regular:
 ```
 npm run server
 ```
-
-#### run the client in the browser
-
-type in your browser: `your-domain-of-your-uxmesh-server/clientworker.html`
-default is `http://localhost:3001` 
-
-### for deployments with docker
+### deployment with docker
 
 the docker image contains `apt-get` calls to install `tcpdump` and `net-tools` to provide some network analysis inside the running docker container.
 further the image is built with the `node:10` base image, which provides some native debian commands inside the container during runtime.
 
 #### create the docker image for the client
 ```
-docker build -f Dockerfile.client  -t uxmesh:0.12-client .
+docker build -f Dockerfile.server  -t uxmesh:server .
 ```
+proceed docker deployment as your enviroment demands
 
-#### run the server
+
+## setup and run the client
+### run the client on the command line
+prerequisites:
+--> install node in version 10.x or higher
+```
+brew install node
+npm install
+```
 with debug output:
 ```
 DEBUG=* npm run client
@@ -63,16 +61,22 @@ use optional parameter to set uxmesh-server address (default is http://localhost
 npm run client http://uxmeshserver.your-domain.com
 ```
 
-#### run the client on the command line
+#### run the client in the browser
 
-with debug output:
+type in your browser: `your-domain-of-your-uxmesh-server/clientworker.html`
+default is `http://localhost:3001` 
+
+### deployment with docker
+
+the docker image contains `apt-get` calls to install `tcpdump` and `net-tools` to provide some network analysis inside the running docker container.
+further the image is built with the `node:10` base image, which provides some native debian commands inside the container during runtime.
+
+#### create the docker image for the client
 ```
-DEBUG=* npm run server
+docker build -f Dockerfile.client  -t uxmesh:client .
 ```
-regular:
-```
-npm run server
-```
+proceed docker deployment as your enviroment demands
+
 
 
 
