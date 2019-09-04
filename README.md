@@ -1,4 +1,8 @@
 # UXmesh
+* User experience monitoring
+* Real end-to-end data
+* Dynamic and scaleable
+
 
 **User**
 „WTF! Is it just me having problems or are the network engineers doing a shitty job? They will just tell me that the problem is on my side, anyway. What if I could actually run the same tool on my client as the network engineer does on his devices so he can see the same I do?“
@@ -20,10 +24,6 @@ Try it out and use the UXmesh Docker TM image to turn your **Cisco Catalyst 9000
 
 **Cisco Catalyst 9000 Switches with Docker support! Thanks Cisco!**
 
-### How it looks like
-
-add ui vids
-
 ### What it can do
 
 When some client runs the UXmesh code, it calls home to the UXmesh server and joins the waiting room. As soon as a second client joins, a webRTC channel is established directly between the two clients. The quality of this channel is now evaluated by the code running on either client and the data is sent back to the UXmesh server.
@@ -35,19 +35,17 @@ As soon as a third client joins, this client establishes channels to either alre
 The new capability of the **Cisco Catalyst 9000 Switches** to host and run docker images now allows to not only monitor between client browsers and servers, but to monitor each network segment by itself! Browser to switch, switch to switch, switch to server!
 And if necessary, that can be done in full mesh!
 
-
 ![](cisco_code4catalyst_gif2.gif)
-
-
-
-> Docker image has been installed and "running" on the Catalyst 9000 instance in the "IOS XE on Catalyst 9000 16.12 EFT Code" Sandbox. Caused by the sandbox restrictions that disallow internet and interdevice connectivity and the need of the project to be deployed on at least three switches to make sense, the next phase would be to validate the project on physical instances of Cisco switches. 
-
+```
+Docker image has been installed and "running" on the Catalyst 9000 instance in the "IOS XE on Catalyst 9000 16.12 EFT Code" Sandbox.
+Caused by the sandbox restrictions that disallow internet and interdevice connectivity and the need of the project to be deployed on at least three switches to make sense, the next phase would be to validate the project on physical instances of Cisco switches. 
+```
 ### Get proactive!
 
 Yay, Proactive Monitoring! Use the application recognition capabilities of Cisco NBAR2 to identify webRTC traffic and its way through the network to proactively monitor this route! Where and when needed! Scaleable, dynamic and end-to-end!
 
 ### How it works
-
+add ui vids
 
 
 ## Installation
