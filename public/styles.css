@@ -1,0 +1,214 @@
+.title {
+    position: absolute;
+    margin-left: 25px;
+    letter-spacing: 1px;
+}
+
+h1, h3 {
+    font-weight: initial;
+}
+
+h1 {
+    font-size: 27px;
+    margin-bottom: 5px;
+}
+
+h3 {
+    font-size: 16px;
+    margin-top: 0;
+}
+
+/*svg {*/
+/*    margin: -60px -80px;*/
+/*}*/
+
+svg text {
+    fill: grey;
+    font-size: 11px;
+}
+
+#sidenav {
+    font-family: monospace;
+    width: 180px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #282c34;
+    border: 1px solid white;
+    border-radius: 5px;
+    color: white;
+    padding: 5px 5px 10px 5px;
+    display: flex;
+    flex-wrap: wrap;
+    height:100%;
+}
+
+#sidenav svg {
+    overflow: visible !important;
+}
+
+.low-latency{
+    fill: orangered;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.regular-latency {
+    fill: white;
+    font-size: 15px;
+}
+
+svg .values text {
+    pointer-events: none;
+    /*stroke-width: 0.5px;*/
+}
+
+.groups:hover {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.groups:hover #hideshow {
+    animation: shown 1s ease;
+}
+
+.groups:hover #show {
+    animation: shown 1s ease;
+}
+
+@keyframes show {
+    0% { opacity: 0; }
+    20% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes hide {
+    0% { opacity: 1; }
+    20% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes hideshow {
+    0% { opacity: 1; }
+    25% { opacity: 0; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes shown {
+    0% { opacity: 1; }
+    100% { opacity: 1; }
+}
+
+#hideshow {
+    animation: hideshow 1s ease;
+}
+
+#hideshow:hover {
+    animation: shown 1s ease;
+}
+
+#hide {
+    animation: hide 1s ease;
+    opacity: 0;
+}
+
+#show {
+    animation: show 1s ease;
+}
+
+.app {
+    text-align: center;
+    font-family: monospace;
+}
+
+.common {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+}
+
+.header {
+    color: #282c34;
+}
+
+.bubble {
+    background-color: #282c34;
+    color: white;
+}
+
+.stream {
+    background-color: white;
+    color: #282c34;
+}
+
+.databox {
+    font-size: calc(15px + 2vmin);
+}
+
+.databox .row {
+    min-width: 100vw;
+    max-width: 100vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.databox .row.lead {
+    font-weight: bold;
+}
+
+.databox .row .col {
+    min-width: 33vw;
+}
+
+.waitingForData {
+    font-size: 10px;
+}
+
+#realtime  .axis {
+    stroke-width: 2;
+}
+
+#realtime .axis .tick line {
+    stroke: black;
+}
+
+#realtime .axis .tick text {
+    fill: black;
+    font-size: 0.5em;
+}
+
+#realtime .axis .domain {
+    fill: none;
+    stroke: black;
+}
+
+#realtime .group {
+    fill: none;
+    stroke: black;
+    stroke-width: 4;
+}
+
+@keyframes vibrate {
+    0%,100% {
+        transform: translateX(0);
+    }
+    10%,30%,50%,70% {
+        transform: translateX(-4px);
+    }
+    20%,40%,60% {
+        transform: translateX(4px);
+    }
+    80% {
+        transform: translateX(2px);
+    }
+    90% {
+        transform: translateX(-2px);
+    }
+}

@@ -5,8 +5,10 @@
   "dependencies": {
     "browserify-middleware": "*",
     "debug": "*",
+    "eventemitter3": "^4.0.0",
     "express": "*",
     "lodash": "^4.17.10",
+    "measured-core": "^1.50.0",
     "prettier-bytes": "*",
     "pretty-data": "^0.40.0",
     "simple-peer": "*",
@@ -17,8 +19,16 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "update:packages": "node ./lib/wipe-dependencies.js && rm -rf node_modules && npm update --save-dev && npm update --save"
+    "client": "node client.js",
+    "server": "node server.js",
+    "update:packages": "node ./lib/wipe-dependencies.js && rm -rf node_modules && npm update --save-dev && npm update --save",
+    "lint": "./node_modules/.bin/eslint *.js"
+  },
+  "devDependencies": {
+    "eslint": "^6.1.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "prettier": "^1.18.2"
   },
   "repository": {
     "type": "git",

@@ -40,29 +40,89 @@ And if necessary, that can be done in full mesh!
 Docker image has been installed and "running" on the Catalyst 9000 instance in the "IOS XE on Catalyst 9000 16.12 EFT Code" Sandbox.
 Caused by the sandbox restrictions that disallow internet and interdevice connectivity and the need of the project to be deployed on at least three switches to make sense, the next phase would be to validate the project on physical instances of Cisco switches. 
 ```
-### Get proactive!
+### Get proactive!
 
 Yay, Proactive Monitoring! Use the application recognition capabilities of Cisco NBAR2 to identify webRTC traffic and its way through the network to proactively monitor this route! Where and when needed! Scaleable, dynamic and end-to-end!
 
 ### How it works
 add ui vids
 
+### features
+#### the client
++ etablishs a connection to the server, to retreive a list of all clients in the network
++ connects to each client in the network directly with webRTC
++ can be executed as a docker container on a device or as client-side-code in the browser
+#### the server
++ the server to agregate data received from clients
 
-## Installation
-
+## setup and run the server
+### run the server on the command line
+prerequisites:
+prerequisites:
+--> install node in version 10.x or higher
 ```
+brew install node
 npm install
-DEBUG=* node server.js
-node client.js
+```
+with debug output:
+```
+DEBUG=* npm run server
+```
+regular:
+```
+npm run server
+```
+### deployment with docker
+
+the docker image contains `apt-get` calls to install `tcpdump` and `net-tools` to provide some network analysis inside the running docker container.
+further the image is built with the `node:10` base image, which provides some native debian commands inside the container during runtime.
+
+#### create the docker image for the client
+```
+docker build -f Dockerfile.server  -t uxmesh:server .
+```
+proceed docker deployment as your enviroment demands
+
+
+## setup and run the client
+### run the client on the command line
+prerequisites:
+--> install node in version 10.x or higher
+```
+brew install node
+npm install
+```
+with debug output:
+```
+DEBUG=* npm run client
+```
+regular:
+```
+npm run client
+```
+use optional parameter to set uxmesh-server address (default is http://localhost:3001):
+```
+npm run client http://uxmeshserver.your-domain.com
 ```
 
-open browser http://localhost:3000
+#### run the client in the browser
 
-remember to change the addr where socker.io connects to, currently static to:
+type in your browser: `your-domain-of-your-uxmesh-server/clientworker.html`
+default is `http://localhost:3001` 
 
-`const socket = io.connect('http://127.0.0.1:3000')`
+### deployment with docker
 
-other stuff:
+the docker image contains `apt-get` calls to install `tcpdump` and `net-tools` to provide some network analysis inside the running docker container.
+further the image is built with the `node:10` base image, which provides some native debian commands inside the container during runtime.
+
+#### create the docker image for the client
+```
+docker build -f Dockerfile.client  -t uxmesh:client .
+```
+proceed docker deployment as your enviroment demands
+
+
+#### additional resources
 
   * chrome://webrtc-internals/
   * https://github.com/feross/simple-peer (see perf dir for simple perfomance test example)
