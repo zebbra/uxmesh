@@ -49,15 +49,17 @@ add ui vids
 
 ### features
 #### the client
-+ etablishs a connection to the server, to retreive a list of all clients in the network
++ etablishes a connection to the server, to retreive a list of all clients in the network
 + connects to each client in the network directly with webRTC
 + can be executed as a docker container on a device or as client-side-code in the browser
 #### the server
-+ the server to agregate data received from clients
++ agregate data received from clients
++ holds a list of all clients, which are connected to each other
++ returns the list of all clients to each conneting client
++ provides a http endpoint and delivers the graphical UI to see fancy animations of the collected network data
 
 ## setup and run the server
 ### run the server on the command line
-prerequisites:
 prerequisites:
 --> install node in version 10.x or higher
 ```
@@ -77,11 +79,15 @@ npm run server
 the docker image contains `apt-get` calls to install `tcpdump` and `net-tools` to provide some network analysis inside the running docker container.
 further the image is built with the `node:10` base image, which provides some native debian commands inside the container during runtime.
 
-#### create the docker image for the client
+#### create the docker image for the server
 ```
 docker build -f Dockerfile.server  -t uxmesh:server .
 ```
 proceed docker deployment as your enviroment demands
+
+##### open graphical UI
+
+type in browser: `your-domain-of-your-uxmesh-server/`
 
 
 ## setup and run the client
@@ -120,7 +126,6 @@ further the image is built with the `node:10` base image, which provides some na
 docker build -f Dockerfile.client  -t uxmesh:client .
 ```
 proceed docker deployment as your enviroment demands
-
 
 #### additional resources
 
