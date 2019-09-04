@@ -29,7 +29,7 @@ svg text {
 
 #sidenav {
     font-family: monospace;
-    width: 160px;
+    width: 180px;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -38,8 +38,14 @@ svg text {
     border: 1px solid white;
     border-radius: 5px;
     color: white;
-    overflow-x: hidden;
-    padding: 5px;
+    padding: 5px 5px 10px 5px;
+    display: flex;
+    flex-wrap: wrap;
+    height:100%;
+}
+
+#sidenav svg {
+    overflow: visible !important;
 }
 
 .low-latency{
@@ -55,7 +61,7 @@ svg text {
 
 svg .values text {
     pointer-events: none;
-    stroke-width: 0.5px;
+    /*stroke-width: 0.5px;*/
 }
 
 .groups:hover {

@@ -4,7 +4,7 @@
     now = new Date(Date.now() - duration)
 
   let width = 1250,
-    height = 500
+    height = 700
 
   let groups = buildGroups()
 
@@ -103,7 +103,7 @@
 
       peerDataFromBackend.forEach(peerPair => {
         if (peerPair[0] === name) {
-          group.data.push(peerPair[2] * 5 + 4 * Math.random()) // push new values to the graph and fancyfy it
+          group.data.push(peerPair[2]) // push new values to the graph and fancyfy it
         }
       })
       group.path.attr('d', line)

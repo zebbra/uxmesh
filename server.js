@@ -9,6 +9,8 @@ const io = require('socket.io')(server)
 const pd = require('pretty-data').pd
 const emitter = require('./sseEmitter')
 
+//const measured = require('measured')
+
 const DEFAULT_PEER_COUNT = 50
 const socklist = {}
 const socklist_reverse = {}
@@ -172,22 +174,17 @@ function serverPolling() {
     }
 
     let data = [] // [ [peerFrom, peerTo, roundtrip, speed, channel/connectionId, lostPackages, relayed] ]
+
     _.values(report).forEach(filteredReportElement => {
       let dataEntry1 = [
         'peer' + filteredReportElement.from,
         'peer' + filteredReportElement.to,
-        Math.max(
-          1,
-          Math.round(filteredReportElement.avgRoundtrip + 10 * Math.random())
-        )
+        Math.max(1, Math.round(filteredReportElement.avgRoundtrip))
       ] //, reportElement.speed, reportElement.channel, reportElement.lost, reportElement.relayed];
       let dataEntry2 = [
         'peer' + filteredReportElement.to,
         'peer' + filteredReportElement.from,
-        Math.max(
-          1,
-          Math.round(filteredReportElement.avgRoundtrip + 10 * Math.random())
-        )
+        Math.max(1, Math.round(filteredReportElement.avgRoundtrip))
       ] //, reportElement.speed, reportElement.channel, reportElement.lost, reportElement.relayed];
       data.push(dataEntry1)
       data.push(dataEntry2)

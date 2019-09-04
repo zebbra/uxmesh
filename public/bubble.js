@@ -137,7 +137,7 @@
         (element[0] === peer1 && element[1] === peer2) ||
         (element[1] === peer1 && element[0] === peer2)
       )
-        if (element[2] > 100) {
+        if (element[2] > 20) {
           //...or whatever "slow" means...
           thisConnectionIsSlow = true
         } else thisConnectionIsSlow = false
