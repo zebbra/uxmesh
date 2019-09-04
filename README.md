@@ -133,10 +133,4 @@ proceed docker deployment as your enviroment demands
   * https://github.com/feross/simple-peer (see perf dir for simple perfomance test example)
   * https://d3js.org/
   * https://gist.github.com/d9bf021c395835427aa0.git
-
-Possible animations to vizualize the data:
-
-  * https://jaumereg.github.io/d3-viz-animated-chord-diagram/
-  * https://guyabel.com/post/animated-directional-chord-diagrams/
-  * https://flowingdata.com/2015/12/15/a-day-in-the-life-of-americans/
-  * https://mimno.github.io/showcase/project2/got/
+  * https://blogs.cisco.com/developer/code-for-catalyst-challenge-is-now-open
