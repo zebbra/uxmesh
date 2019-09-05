@@ -1,3 +1,4 @@
+# provides additional unix tools inside the container to analyze the network
 FROM node:10
 
 RUN apt-get update \
@@ -14,4 +15,4 @@ RUN npm install
 
 COPY . .
 EXPOSE 3001
-CMD npm run client
+CMD npm run server

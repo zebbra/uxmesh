@@ -275,11 +275,34 @@ function serverPolling() {
         !isNaN(element[2])
       )
     })
-    emitter.publish(JSON.stringify(data))
-    console.log('stats ', new Date(), '\n===========\n', data, '\n')
+
+    if (isDatareportConsistent(data)) {
+      emitter.publish(JSON.stringify(data))
+      console.log('stats ', new Date(), '\n===========\n', data, '\n')
+    } else console.log('data report inonsistent')
   } catch (e) {
     console.log('serverPolling -> ' + e.message)
   }
   //setInterval vs setTimeout: setTimeout executes every "function execution time + given timeout", setInterval executes "every given interval time"
   setTimeout(serverPolling, 5000)
+}
+
+function isDatareportConsistent(report) {
+  if (report) {
+    const amountOfPeers = getUniqIds(report).length
+    const sizeOfReport = report.length
+
+    console.log('amountOfPeers', amountOfPeers)
+    console.log('sizeOfReport', sizeOfReport)
+    return amountOfPeers * amountOfPeers - amountOfPeers === sizeOfReport
+  }
+  return false
+}
+
+function getUniqIds(data) {
+  let flattenAndWithoutNumbers = [].concat(...data).filter(item => {
+    return parseInt(item) != item //get rid of last column which contains only numbers, we just need to proceed with the string-id's
+  })
+
+  return [...new Set(flattenAndWithoutNumbers)] //return new array with Set constructor, to avoid dupplicates
 }

@@ -74,18 +74,21 @@ regular:
 ```
 npm run server
 ```
+
 ### deployment with docker
 
-the docker image contains `apt-get` calls to install `tcpdump` and `net-tools` to provide some network analysis inside the running docker container.
-further the image is built with the `node:10` base image, which provides some native debian commands inside the container during runtime.
-
-#### create the docker image for the server
+#### build local image...
 ```
-docker build -f Dockerfile.server  -t uxmesh:server .
+docker build -f Dockerfile.prod.server -t uxmesh:server .
 ```
-proceed docker deployment as your enviroment demands
 
-##### open graphical UI
+#### ...or use the public image on dockerhub, and...
+
+```docker pull uxmesh-server```
+
+...proceed docker deployment as your enviroment demands
+
+### open graphical UI
 
 type in browser: `your-domain-of-your-uxmesh-server/`
 
@@ -111,21 +114,23 @@ use optional parameter to set uxmesh-server address (default is http://localhost
 npm run client http://uxmeshserver.your-domain.com
 ```
 
-#### run the client in the browser
+### run the client in the browser
 
-type in your browser: `your-domain-of-your-uxmesh-server/clientworker.html`
-default is `http://localhost:3001` 
+type in your browser: `your-domain-of-your-uxmesh-server`
+default is `https://uxmesh.k8s.kubernetes.zebbra.ch` 
 
 ### deployment with docker
 
-the docker image contains `apt-get` calls to install `tcpdump` and `net-tools` to provide some network analysis inside the running docker container.
-further the image is built with the `node:10` base image, which provides some native debian commands inside the container during runtime.
+#### build local image...
+```
+docker build -f Dockerfile.prod.client -t uxmesh:client .
+```
 
-#### create the docker image for the client
-```
-docker build -f Dockerfile.client  -t uxmesh:client .
-```
-proceed docker deployment as your enviroment demands
+#### ...or use the public image on dockerhub, and...
+
+```docker pull uxmesh-client```
+
+...proceed docker deployment as your enviroment demands
 
 #### additional resources
 
