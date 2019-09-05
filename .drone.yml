@@ -31,9 +31,9 @@ steps:
       username: { from_secret: quay_username }
       password: { from_secret: quay_password }
       registry: quay.io
-      repo: quay.io/zebbra/uxmesh
+      repo: quay.io/zebbra/uxmesh-server
       tags: 'latest,${DRONE_COMMIT_SHA:0:7}'
-      cache_from: quay.io/zebbra/uxmesh:latest
+      cache_from: quay.io/zebbra/uxmesh-server:latest
       custom_labels: [quay.expires-after=30d]
       mtu: 1376
 
