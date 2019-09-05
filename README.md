@@ -47,12 +47,12 @@ Yay, Proactive Monitoring! Use the application recognition capabilities of Cisco
 ### How it works
 add ui vids
 
-### features
-#### the client
+## features
+### the client
 + etablishes a connection to the server, to retreive a list of all clients in the network
 + connects to each client in the network directly with webRTC
 + can be executed as a docker container on a device or as client-side-code in the browser
-#### the server
+### the server
 + agregate data received from clients
 + holds a list of all clients, which are connected to each other
 + returns the list of all clients to each conneting client
