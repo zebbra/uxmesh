@@ -52,3 +52,4 @@ steps:
       reuse_values: true
       update_dependencies: true
       skip_tls_verify: true
+      dockerfile: Dockerfile.server.prod
