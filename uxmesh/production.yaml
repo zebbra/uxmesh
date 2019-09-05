@@ -1,0 +1,63 @@
+#
+# Chart: curena-scaip
+#
+
+imagePullSecrets:
+  - name: zebbra-kube-pull-secret
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/tls-acme: 'true'
+  hosts:
+    - host: curena-scaip.k8s.zebbra.ch
+      paths:
+        - /
+  tls:
+    - secretName: curena-scaip-tls
+      hosts:
+        - curena-scaip.k8s.zebbra.ch
+
+google:
+  docKey: 1jxbrvgW3R1HOkX1etWue2biLRwRYuZDdGEHBYRCOU_s
+  privateKey: "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC6cLmFyz3CJJcW\nsz7vvWaW0Nzz3e6elQSuMWSB9yxsj7MFqnZwQcNSU3CQtB5pn7g9t8553c/3XqUM\nKuL9r3zi5qk98YVKmyWGU4u5OfAkcpNCwZ2EoBjj8A2eSH74+wYxzC8FTed6dlLW\nhfZBrx7HnmSLIugfehontafd9gL/L8148rqZf1p4pC9yfEmZKwQnwXaPr2ZCutGE\ni2fnGm6FqmnL27Ywq3jeKrs+4qmCNSxRRrAco8OLgvOy1PeZ4qSSmlTZNh2cUMi/\nRk5dq5uk1cG2pmfkR2Yw0+Ea708HQ16EeFB7bX1bXM7KGBLBsHGWiv3cCJz+BXLj\ntICdLTvjAgMBAAECggEABbK6SNeMXKmnoH779nHQd92MUzu+NkSRrw09aCd4yRyf\nORYbppSr9pEsSI/ouguyothCTEE2QPY4jyWkaGJ7q6enFoiSLVSOkgttosydhU+n\nJowqV0pZWGYW1HacwtlROCZobX4TDBAfugTAIQPMKgeyRPpdI9EkiYAo0ETblJcB\nEjv5sa4CLuzHuDOdEwuSL0O4mwMjz0TAK6UNsAUbgImDXVbZpejJVKaw2Hnn0CGV\nDu8XqrhUlNDIycx/Re2hd1MEGI+WZblNvnD8g8akTpvi607d2v4j34GVC0WAE/5W\nVqk5XPvglDItcYhWqBiyEBFvUH4JsBZwU5nJSSAMoQKBgQDfAsg6YaTxuZzGArBe\n1b60g0MHyigB7arf8OQptJAU0Ouz5Dn/yuEGc3bZ23CIHeSl+pdG6Rfqn1lvFmMX\nw49hVPEHVL5sRaC0+MACh6lDQQ8f3IU5bqnEjUsikMbl9SaeP9wrs9tmraflJBfx\nlmZfycoBhJg7vzynSrDnMA74EwKBgQDWBQy7DdedaWbuGqI3XTjGZcCGtLDTFwDv\nGQ54NodYFwcQB0z6KrAWd3sR7ywN9dZxkVR2Y7r4WD3DKaLxjFYm34hnAWBv3GnZ\nyHnniW6Wma+v4tkToz5ubtGnCqnV5noCN6EgBip98DK43NuuFgc0mAiCa/iZuHEQ\n3WCHzM3G8QKBgQCfJ0okOBlSFagnvDWIiLx/8Ql+Xqxsq+P9y9nZVa5Z3LvJ9z/Z\nKD2tr+uLEMtfqQ3L0mnxxlo2LCDUYcK4a+1AhjE5jSYU+R/252uIoq6Oe7jCgUtm\nsG5iAoAzm+UGqg00dNi5K7ORtK8UncyksjQ/ejA7IxjN0u4Dag+T/j1AlwKBgQC6\nruDx8RsYta4RF65T+L7jYDJVzhtHphMsfIDAn1/jmQKSGqwsszux/Tqe5C9bZgtO\nOOSh+FBI/D+zkwgNBsrHUcibgPnr2SmDzHl5W8nZF+nF1Gxh0s1MauH5gTWv3UCj\n2n5zfq1l+TVlR1FgQtq6J7uUeDX7cIU/nrrq+dytIQKBgBn8tEmVXUiGFJ2vSkkU\n5J4CXE0QnOvrMr/HN6WKcnnc/VTvNcKjsEc1QTrA2Rv+Sygz/A53RebpZfybHuRg\nv3/HYCZ7apvYIeHXp6jfSZG6woQyIvcs3ONuglrMn0pIE2RgWtG9Wv2iqrlk9DZF\nLCkg+BMxHlKeNVU4qLARXFIv\n-----END PRIVATE KEY-----\n"
+  clientEmail: kusi-generic-drive-sheet-accou@celtic-medium-115314.iam.gserviceaccount.com
+
+debug: '*'
+
+proxyto: '904@mouselike.org'
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+#
+# Subchart: drachtio
+#
+
+drachtio:
+  enabled: true
+
+  host: curena-scaip-drachtio
+  port: 9022
+
+  secret: unxaWqzbq4mzYw7i
+  externalIP: 116.202.3.163
+
+  service:
+    type: NodePort
+    nodePorts:
+      admin: 9022
+      sip: 5060
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 32Mi
+    limits:
+      cpu: 500m
+      memory: 64Mi
