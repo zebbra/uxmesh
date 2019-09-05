@@ -5,11 +5,14 @@
 
 
 **User**
+
 „WTF! Is it just me having problems or are the network engineers doing a shitty job? They will just tell me that the problem is on my side, anyway. What if I could actually run the same tool on my client as the network engineer does on his devices so he can see the same I do?“
+
 Are your users sometimes complaining about network performance and you can’t give them a verified response because you’re missing a holistic end-to-end network performance monitoring?
 Is the problem on the user end? Is the problem on a mediatory device? How can we make sure that all involved talk the same language and that experienced problems can be addressed in the right manner?
 
 **Network Engineer**
+
 „Well, of course it’s a shame we can’t easily see how our network’s performance looks like on the user client itself, that we miss the last mile. A simple, real-world end user experience monitoring to extend our low level monitoring data? And all in an easy solution? Yeah, that would be awesome!“
 
 Good news! We understand you and built exactly that!
@@ -53,7 +56,7 @@ add ui vids
 + connects to each client in the network directly with webRTC
 + can be executed as a docker container on a device or as client-side-code in the browser
 ### the server
-+ agregate data received from clients
++ aggregate data received from clients
 + holds a list of all clients, which are connected to each other
 + returns the list of all clients to each conneting client
 + provides a http endpoint and delivers the graphical UI to see fancy animations of the collected network data
