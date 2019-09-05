@@ -14,40 +14,40 @@ steps:
       - npm run lint
 
 ---
-kind: pipeline
-name: release
-
-trigger:
-  event: [push]
-  #branch: [uxmesh-goes-k8s, master]
-
-depends_on:
-  - test
-
-steps:
-  - name: build
-    image: plugins/docker
-    settings:
-      username: { from_secret: quay_username }
-      password: { from_secret: quay_password }
-      registry: quay.io
-      repo: quay.io/zebbra/uxmesh-server
-      tags: 'latest,${DRONE_COMMIT_SHA:0:7}'
-      cache_from: quay.io/zebbra/uxmesh-server:latest
-      custom_labels: [quay.expires-after=30d]
-      mtu: 1376
-
-  - name: deploy
-    image: quay.io/ipedrazas/drone-helm
-    environment:
-      API_SERVER: https://kubernetes.default
-      KUBERNETES_TOKEN: { from_secret: kubernetes_token }
-    settings:
-      chart: ./charts/uxmesh
-      release: uxmesh-server
-      namespace: uxmesh-server
-      values: image.tag=${DRONE_COMMIT_SHA:0:7}
-      values_files: [charts/production.yaml]
-      reuse_values: true
-      update_dependencies: true
-      skip_tls_verify: true
+#kind: pipeline
+#name: release
+#
+#trigger:
+#  event: [push]
+#  branch: [uxmesh-goes-k8s, master]
+#
+#depends_on:
+#  - test
+#
+#steps:
+#  - name: build
+#    image: plugins/docker
+#    settings:
+#      username: { from_secret: quay_username }
+#      password: { from_secret: quay_password }
+#      registry: quay.io
+#      repo: quay.io/zebbra/uxmesh-server
+#      tags: 'latest,${DRONE_COMMIT_SHA:0:7}'
+#      cache_from: quay.io/zebbra/uxmesh-server:latest
+#      custom_labels: [quay.expires-after=30d]
+#      mtu: 1376
+#
+#  - name: deploy
+#    image: quay.io/ipedrazas/drone-helm
+#    environment:
+#      API_SERVER: https://kubernetes.default
+#      KUBERNETES_TOKEN: { from_secret: kubernetes_token }
+#    settings:
+#      chart: ./charts/uxmesh
+#      release: uxmesh-server
+#      namespace: uxmesh-server
+#      values: image.tag=${DRONE_COMMIT_SHA:0:7}
+#      values_files: [charts/production.yaml]
+#      reuse_values: true
+#      update_dependencies: true
+#      skip_tls_verify: true
