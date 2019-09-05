@@ -47,7 +47,7 @@ Caused by the sandbox restrictions that disallow internet and interdevice connec
 
 Yay, Proactive Monitoring! Use the application recognition capabilities of Cisco NBAR2 to identify webRTC traffic and its way through the network to proactively monitor this route! Where and when needed! Scaleable, dynamic and end-to-end!
 
-### How it works
+### How it looks
 
 ![](UXmesh_UIDemo.gif)
 
