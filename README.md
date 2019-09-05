@@ -51,7 +51,7 @@ Yay, Proactive Monitoring! Use the application recognition capabilities of Cisco
 
 ![](UXmesh_UIDemo.gif)
 
-## features
+## Features
 ### The client
 + etablishes a connection to the server, to retreive a list of all clients in the network
 + connects to each client in the network directly with webRTC
