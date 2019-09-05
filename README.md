@@ -62,7 +62,7 @@ Yay, Proactive Monitoring! Use the application recognition capabilities of Cisco
 + returns the list of all clients to each conneting client
 + provides a http endpoint and delivers the graphical UI to see fancy animations of the collected network data
 
-## setup and run the server
+## Server setup
 ### run the server on the command line
 prerequisites:
 --> install node in version 10.x or higher
@@ -94,7 +94,7 @@ proceed docker deployment as your enviroment demands
 type in browser: `your-domain-of-your-uxmesh-server/`
 
 
-## setup and run the client
+## Client Setup
 ### run the client on the command line
 prerequisites:
 --> install node in version 10.x or higher
