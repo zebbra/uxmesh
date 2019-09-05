@@ -52,18 +52,18 @@ Yay, Proactive Monitoring! Use the application recognition capabilities of Cisco
 ![](UXmesh_UIDemo.gif)
 
 ## features
-### the client
+### The client
 + etablishes a connection to the server, to retreive a list of all clients in the network
 + connects to each client in the network directly with webRTC
 + can be executed as a docker container on a device or as client-side-code in the browser
-### the server
+### The server
 + aggregate data received from clients
 + holds a list of all clients, which are connected to each other
 + returns the list of all clients to each conneting client
 + provides a http endpoint and delivers the graphical UI to see fancy animations of the collected network data
 
 ## Server setup
-### run the server on the command line
+### Run the server on the command line
 prerequisites:
 --> install node in version 10.x or higher
 ```
@@ -78,60 +78,61 @@ regular:
 ```
 npm run server
 ```
-### deployment with docker
+### Deployment with docker
 
 the docker image contains `apt-get` calls to install `tcpdump` and `net-tools` to provide some network analysis inside the running docker container.
 further the image is built with the `node:10` base image, which provides some native debian commands inside the container during runtime.
 
-#### create the docker image for the server
+#### Create the docker image for the server
 ```
 docker build -f Dockerfile.server  -t uxmesh:server .
 ```
 proceed docker deployment as your enviroment demands
 
-##### open graphical UI
+##### Open graphical UI
 
 type in browser: `your-domain-of-your-uxmesh-server/`
 
 
 ## Client Setup
-### run the client on the command line
-prerequisites:
+### Run the client on the command line
+
+Prerequisites:
 --> install node in version 10.x or higher
 ```
 brew install node
 npm install
 ```
-with debug output:
+With debug output:
 ```
 DEBUG=* npm run client
 ```
-regular:
+Regular:
 ```
 npm run client
 ```
-use optional parameter to set uxmesh-server address (default is http://localhost:3001):
+Use optional parameter to set uxmesh-server address (default is http://localhost:3001):
 ```
 npm run client http://uxmeshserver.your-domain.com
 ```
 
-#### run the client in the browser
+#### Run the client in the browser
 
 type in your browser: `your-domain-of-your-uxmesh-server/clientworker.html`
 default is `http://localhost:3001` 
 
-### deployment with docker
+### Deployment with docker
 
 the docker image contains `apt-get` calls to install `tcpdump` and `net-tools` to provide some network analysis inside the running docker container.
 further the image is built with the `node:10` base image, which provides some native debian commands inside the container during runtime.
 
-#### create the docker image for the client
+#### Create the docker image for the client
 ```
 docker build -f Dockerfile.client  -t uxmesh:client .
 ```
 proceed docker deployment as your enviroment demands
 
-#### additional resources
+#### Additional resources
 
   * chrome://webrtc-internals/
   * https://github.com/feross/simple-peer (see perf dir for simple perfomance test example)
