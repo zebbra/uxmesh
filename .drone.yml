@@ -44,8 +44,8 @@ steps:
       KUBERNETES_TOKEN: { from_secret: kubernetes_token }
     settings:
       chart: ./charts/uxmesh
-      release: uxmesh
-      namespace: uxmesh
+      release: uxmesh-server
+      namespace: uxmesh-server
       values: image.tag=${DRONE_COMMIT_SHA:0:7}
       values_files: [charts/production.yaml]
       reuse_values: true
