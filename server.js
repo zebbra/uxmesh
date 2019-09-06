@@ -276,15 +276,42 @@ function serverPolling() {
       )
     })
 
-    if (isDatareportConsistent(data)) {
-      emitter.publish(JSON.stringify(data))
-      console.log('stats ', new Date(), '\n===========\n', data, '\n')
-    } else console.log('data report inonsistent')
+    if (!isDatareportConsistent(data)) {
+      console.log('data report inonsistent, sanitizing...')
+      data = sanitize(data)
+    }
+
+    emitter.publish(JSON.stringify(data))
+    console.log('stats ', new Date(), '\n===========\n', data, '\n')
   } catch (e) {
     console.log('serverPolling -> ' + e.message)
   }
   //setInterval vs setTimeout: setTimeout executes every "function execution time + given timeout", setInterval executes "every given interval time"
   setTimeout(serverPolling, 5000)
+}
+
+function sanitize(report) {
+  const amountOfPeers = getUniqIds(report).length
+
+  const exactAmountAPeerHasToOccure =
+    (amountOfPeers * amountOfPeers - amountOfPeers) / amountOfPeers
+
+  const flatReport = getFlatPeers(report)
+
+  let sanitizedReport = report
+  getUniqIds().forEach(peer => {
+    const peerOccurences = _.countBy(flatReport)[peer] || 0
+    if (peerOccurences !== exactAmountAPeerHasToOccure) {
+      sanitizedReport = sanitizedReport.filter(peerPair => {
+        return peer !== peerPair[0] && peerPair[1]
+      })
+    }
+  })
+  return sanitizedReport
+}
+
+function countPeers(report, peer) {
+  _.find(getFlatPeers(report), peer)
 }
 
 function isDatareportConsistent(report) {
@@ -300,9 +327,13 @@ function isDatareportConsistent(report) {
 }
 
 function getUniqIds(data) {
-  let flattenAndWithoutNumbers = [].concat(...data).filter(item => {
-    return parseInt(item) != item //get rid of last column which contains only numbers, we just need to proceed with the string-id's
-  })
+  let flattenAndWithoutNumbers = getFlatPeers(data)
 
   return [...new Set(flattenAndWithoutNumbers)] //return new array with Set constructor, to avoid dupplicates
+}
+
+function getFlatPeers(data) {
+  return [].concat(...data).filter(item => {
+    return parseInt(item) != item //get rid of last column which contains only numbers, we just need to proceed with the string-id's
+  })
 }
