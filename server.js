@@ -299,7 +299,7 @@ function sanitize(report) {
   const flatReport = getFlatPeers(report)
 
   let sanitizedReport = report
-  getUniqIds().forEach(peer => {
+  getUniqIds(report).forEach(peer => {
     const peerOccurences = _.countBy(flatReport)[peer] || 0
     if (peerOccurences !== exactAmountAPeerHasToOccure) {
       sanitizedReport = sanitizedReport.filter(peerPair => {
