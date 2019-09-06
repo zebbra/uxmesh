@@ -46,7 +46,7 @@ steps:
     settings:
       chart: ./uxmesh
       release: uxmesh-server
-      namespace: uxmesh-server
+      namespace: uxmesh
       values: image.tag=${DRONE_COMMIT_SHA:0:7}
       values_files: [uxmesh/production.yaml]
       reuse_values: true
