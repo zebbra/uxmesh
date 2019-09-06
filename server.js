@@ -303,15 +303,11 @@ function sanitize(report) {
     const peerOccurences = _.countBy(flatReport)[peer] || 0
     if (peerOccurences !== exactAmountAPeerHasToOccure) {
       sanitizedReport = sanitizedReport.filter(peerPair => {
-        return peer !== peerPair[0] && peerPair[1]
+        return !(peer === peerPair[0] || peerPair[1])
       })
     }
   })
   return sanitizedReport
-}
-
-function countPeers(report, peer) {
-  _.find(getFlatPeers(report), peer)
 }
 
 function isDatareportConsistent(report) {
