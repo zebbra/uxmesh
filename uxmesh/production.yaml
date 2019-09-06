@@ -2,6 +2,11 @@
 # Chart: uxmesh
 #
 
+image:
+  repository: quay.io/zebbra/uxmesh-server
+  tag: latest
+  pullPolicy: IfNotPresent
+
 imagePullSecrets:
   - name: zebbra-kube-pull-secret
 
