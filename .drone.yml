@@ -54,7 +54,7 @@ steps:
       skip_tls_verify: true
       dockerfile: Dockerfile.server.prod
 
- - name: deploy-client
+  - name: deploy-client
     image: quay.io/ipedrazas/drone-helm
     environment:
       API_SERVER: https://kubernetes.default

@@ -280,7 +280,7 @@ function serverPolling() {
     })
 
     // if (!isDatareportConsistent(data)) {
-    console.log('data report inonsistent, sanitizing...')
+    // console.log('data report inonsistent, sanitizing...')
     //data = sanitize(data)
     // }
 
