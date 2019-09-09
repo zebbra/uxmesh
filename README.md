@@ -1,35 +1,39 @@
 # UXmesh
 * User experience monitoring
 * Real end-to-end data
+* Zero touch deployment
 * Dynamic and scaleable
 
 
-**User**
+![comics](http://wairoa.net/cartoons/support1.gif "user problem")
 
-„WTF! Is it just me having problems or are the network engineers doing a shitty job? They will just tell me that the problem is on my side, anyway. What if I could actually run the same tool on my client as the network engineer does on his devices so he can see the same I do?“
+# The story
+
+Once upon a time, network troulbeshooting used to be easy. Just assume that that user is the problem, tell him/her to turn it on and off again and in 90% of the case, that worked wonders. Well, those times are over. Microsoft manages to build software that works (mostly without 24h reboots), the network has become truly mission critical and support people that  just blame the error on the user are no longer fashionable.
+
+# The Problem
 
 Are your users sometimes complaining about network performance and you can’t give them a verified response because you’re missing a holistic end-to-end network performance monitoring?
-Is the problem on the user end? Is the problem on a mediatory device? How can we make sure that all involved talk the same language and that experienced problems can be addressed in the right manner?
+Is the problem on the user end side? Is is the network link or the switching infrastrucutre?
+Pinpointing the root case isn't easy and even thought there are many tools out there, they either focus on the network part or on the user side. 
+Now, what if you could run the same test scenario from withing the network as well as from the users computer? This even without installing anything on the users computer! And what if you could aggregate all this information on one simple screen and get a quick overview of what's going on? Does this sounds like a fairytale? 
 
-**Network Engineer**
+# Guess what ... [the solution]
 
-„Well, of course it’s a shame we can’t easily see how our network’s performance looks like on the user client itself, that we miss the last mile. A simple, real-world end user experience monitoring to extend our low level monitoring data? And all in an easy solution? Yeah, that would be awesome!“
-
-Good news! We understand you and built exactly that!
-**UXmesh**, an end-to-end user experience monitoring tool, that brings real-life monitoring to a whole new level.
+... we just built a simple, yet very powerful soltuion to this problem!
+**UXmesh** is an end-to-end user experience monitoring tool, that brings real-life monitoring to a whole new level.
 Get data from the clients browser, network components and even further!
 So, don't rely on your clients subjective opinion. Give him a tool to deliver live, unbiased data you can work with.
 
-So, with **UXmesh** you can easily test end-to-end performance throughout your network up into any user’s browser. And thanks to the new Docker support on the **Cisco Catalyst 9000 Switches**, even your network appliances are integrated in a breeze! Your network end-to-end performance monitoring is now a piece of cake!
-On user clients, servers and network appliances with the exact same code! How cool is that?
+With **UXmesh** you can easily test the end-to-end **network quality** throughout your network up into any user’s browser. Thanks to the new Docker support on the **Cisco Catalyst 9000 Switches** your network devices can run the same code that is executed in the users browser! Ohh my... you see where this is going. All intermediate network nodes, combined with the users in one single mesh where every individual connection can be seen.... this gives you a hell of an overview and helps you quickly locate the root cause.
 
 Try it out and use the UXmesh Docker TM image to turn your **Cisco Catalyst 9000 Switches** into performance monitoring nodes across your whole network!
 
 **Cisco Catalyst 9000 Switches with Docker support! Thanks Cisco!**
 
-### What it can do
+### What can it do?
 
-When some client runs the UXmesh code, it calls home to the UXmesh server and joins the waiting room. As soon as a second client joins, a webRTC channel is established directly between the two clients. The quality of this channel is now evaluated by the code running on either client and the data is sent back to the UXmesh server.
+When a client runs the UXmesh code, it calls home to the UXmesh server and joins the waiting room. As soon as a second client joins, a webRTC channel is established directly between the two clients. The quality of this channel is now evaluated by the code running on either client and the data is sent back to the UXmesh server.
 
 As soon as a third client joins, this client establishes channels to either already active clients, and so forth.
 
