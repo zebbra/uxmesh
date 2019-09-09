@@ -2,7 +2,7 @@
 * User experience monitoring
 * Real end-to-end data
 * Zero touch deployment
-* Dynamic and scaleable
+* Dynamic and scalable
 
 
 ![comics](http://wairoa.net/cartoons/support1.gif "user problem")
