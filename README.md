@@ -1,15 +1,18 @@
 # UXmesh
-* User experience monitoring
-* Real end-to-end data
-* Dynamic and scaleable
 
+- User experience monitoring
+- Real end-to-end data
+- Dynamic and scaleable
 
 **User**
+
 „WTF! Is it just me having problems or are the network engineers doing a shitty job? They will just tell me that the problem is on my side, anyway. What if I could actually run the same tool on my client as the network engineer does on his devices so he can see the same I do?“
+
 Are your users sometimes complaining about network performance and you can’t give them a verified response because you’re missing a holistic end-to-end network performance monitoring?
 Is the problem on the user end? Is the problem on a mediatory device? How can we make sure that all involved talk the same language and that experienced problems can be addressed in the right manner?
 
 **Network Engineer**
+
 „Well, of course it’s a shame we can’t easily see how our network’s performance looks like on the user client itself, that we miss the last mile. A simple, real-world end user experience monitoring to extend our low level monitoring data? And all in an easy solution? Yeah, that would be awesome!“
 
 Good news! We understand you and built exactly that!
@@ -36,108 +39,130 @@ The new capability of the **Cisco Catalyst 9000 Switches** to host and run docke
 And if necessary, that can be done in full mesh!
 
 ![](cisco_code4catalyst_gif2.gif)
+
 ```
 Docker image has been installed and "running" on the Catalyst 9000 instance in the "IOS XE on Catalyst 9000 16.12 EFT Code" Sandbox.
-Caused by the sandbox restrictions that disallow internet and interdevice connectivity and the need of the project to be deployed on at least three switches to make sense, the next phase would be to validate the project on physical instances of Cisco switches. 
+Caused by the sandbox restrictions that disallow internet and interdevice connectivity and the need of the project to be deployed on at least three switches to make sense, the next phase would be to validate the project on physical instances of Cisco switches.
 ```
+
 ### Get proactive!
 
 Yay, Proactive Monitoring! Use the application recognition capabilities of Cisco NBAR2 to identify webRTC traffic and its way through the network to proactively monitor this route! Where and when needed! Scaleable, dynamic and end-to-end!
 
-### How it works
-add ui vids
+### How it looks
 
-## features
-### the client
-+ etablishes a connection to the server, to retreive a list of all clients in the network
-+ connects to each client in the network directly with webRTC
-+ can be executed as a docker container on a device or as client-side-code in the browser
-### the server
-+ agregate data received from clients
-+ holds a list of all clients, which are connected to each other
-+ returns the list of all clients to each conneting client
-+ provides a http endpoint and delivers the graphical UI to see fancy animations of the collected network data
+![](UXmesh_UIDemo.gif)
 
-## setup and run the server
-### run the server on the command line
+## Features
+
+### The client
+
+- etablishes a connection to the server, to retreive a list of all clients in the network
+- connects to each client in the network directly with webRTC
+- can be executed as a docker container on a device or as client-side-code in the browser
+
+### The server
+
+- aggregate data received from clients
+- holds a list of all clients, which are connected to each other
+- returns the list of all clients to each conneting client
+- provides a http endpoint and delivers the graphical UI to see fancy animations of the collected network data
+
+## Server setup
+
+### Run the server from source
+
 prerequisites:
 --> install node in version 10.x or higher
+
 ```
 brew install node
 npm install
 ```
+
 with debug output:
+
 ```
 DEBUG=* npm run server
 ```
+
 regular:
+
 ```
 npm run server
 ```
 
-### deployment with docker
+### Run the server using docker
 
-#### build local image...
 ```
-docker build -f Dockerfile.prod.server -t uxmesh:server .
+docker run quay.io/zebbra/uxmesh:latest npm run server
 ```
 
-#### ...or use the public image on quqy.io, and...
+or
 
-```quay.io/zebbra/uxmesh-server:```
+```
+docker build -t uxmesh .
+docker run uxmesh npm run server
+```
 
-...proceed docker deployment as your enviroment demands
-
-### open graphical UI
+##### Open graphical UI
 
 type in browser: `your-domain-of-your-uxmesh-server/`
 apart from the graphical interface your browser operates as a client as well and starts to send peer information accross the network to all registered peers.
 
+## Client Setup
 
-## setup and run the client
-### run the client on the command line
-prerequisites:
+### Run the client from source
+
+Prerequisites:
 --> install node in version 10.x or higher
+
 ```
 brew install node
 npm install
 ```
-with debug output:
+
+With debug output:
+
 ```
 DEBUG=* npm run client
 ```
-regular:
+
+Regular:
+
 ```
 npm run client
 ```
-use optional parameter to set uxmesh-server address (default is http://localhost:3001):
+
+Use optional parameter to set uxmesh-server address (default is http://localhost:3001):
+
 ```
 npm run client http://uxmeshserver.your-domain.com
 ```
 
-### run the client in the browser
+### Run the client in the browser
 
 type in your browser: `your-domain-of-your-uxmesh-server`
-default is `https://uxmesh.k8s.kubernetes.zebbra.ch` 
+default is `https://uxmesh.k8s.zebbra.ch`
 apart from the graphical interface your browser operates as a client as well and starts to send peer information accross the network to all registered peers.
 
-### deployment with docker
+### Run the client using docker
 
-#### build local image...
 ```
-docker build -f Dockerfile.prod.client -t uxmesh:client .
+docker run quay.io/zebbra/uxmesh:latest npm run client
 ```
 
-#### ...or use the public image on dockerhub, and...
+or
 
-```quay.io/zebbra/uxmesh-client:latest```
+```
+docker build -t uxmesh .
+docker run uxmesh npm run client
+```
 
-...proceed docker deployment as your enviroment demands
+#### Additional resources
 
-#### additional resources
-
-  * chrome://webrtc-internals/
-  * https://github.com/feross/simple-peer (see perf dir for simple perfomance test example)
-  * https://d3js.org/
-  * https://gist.github.com/d9bf021c395835427aa0.git
-  * https://blogs.cisco.com/developer/code-for-catalyst-challenge-is-now-open
+- chrome://webrtc-internals/
+- https://github.com/feross/simple-peer (see perf dir for simple perfomance test example)
+- https://d3js.org/
+- https://gist.github.com/d9bf021c395835427aa0.git
+- https://blogs.cisco.com/developer/code-for-catalyst-challenge-is-now-open
