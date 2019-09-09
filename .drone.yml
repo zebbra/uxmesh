@@ -47,6 +47,6 @@ steps:
       release: uxmesh
       namespace: uxmesh
       values: image.tag=${DRONE_COMMIT_SHA:0:7}
-      values_files: [uxmesh/production.yaml]
+      values_files: [chart/production.yaml]
       reuse_values: true
       skip_tls_verify: true
