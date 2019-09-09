@@ -38,7 +38,7 @@ steps:
       mtu: 1376
       dockerfile: Dockerfile.server.prod
 
-  - name: deploy
+  - name: deploy-server
     image: quay.io/ipedrazas/drone-helm
     environment:
       API_SERVER: https://kubernetes.default
@@ -48,8 +48,24 @@ steps:
       release: uxmesh-server
       namespace: uxmesh-server
       values: image.tag=${DRONE_COMMIT_SHA:0:7}
-      values_files: [uxmesh/production.yaml]
+      values_files: [uxmesh/production-server.yaml]
       reuse_values: true
       update_dependencies: true
       skip_tls_verify: true
       dockerfile: Dockerfile.server.prod
+
+ - name: deploy-client
+    image: quay.io/ipedrazas/drone-helm
+    environment:
+      API_SERVER: https://kubernetes.default
+      KUBERNETES_TOKEN: { from_secret: kubernetes_token }
+    settings:
+      chart: ./uxmesh
+      release: uxmesh-client
+      namespace: uxmesh-client
+      values: image.tag=${DRONE_COMMIT_SHA:0:7}-client
+      values_files: [uxmesh/production-client.yaml]
+      reuse_values: true
+      update_dependencies: true
+      skip_tls_verify: true
+      dockerfile: Dockerfile.client.prod

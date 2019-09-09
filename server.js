@@ -162,6 +162,7 @@ function serverPolling() {
         const rep = report[stat.channel]
 
         if (stat.initiator) {
+          rep.clientIp = sock.clientIp
           rep.from = sock.id
           rep.to = stat.peerId
           rep.speed = stat.speed
