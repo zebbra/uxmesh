@@ -1,19 +1,19 @@
-{{- if .Values.ingress.enabled -}}
+{{- if .Values.server.ingress.enabled -}}
 {{- $fullName := include "uxmesh.fullname" . -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ $fullName }}-server
   labels:
 {{ include "uxmesh.labels" . | indent 4 }}
-  {{- with .Values.ingress.annotations }}
+  {{- with .Values.server.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-{{- if .Values.ingress.tls }}
+{{- if .Values.server.ingress.tls }}
   tls:
-  {{- range .Values.ingress.tls }}
+  {{- range .Values.server.ingress.tls }}
     - hosts:
       {{- range .hosts }}
         - {{ . | quote }}
@@ -22,14 +22,14 @@ spec:
   {{- end }}
 {{- end }}
   rules:
-  {{- range .Values.ingress.hosts }}
+  {{- range .Values.server.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
         {{- range .paths }}
           - path: {{ . }}
             backend:
-              serviceName: {{ $fullName }}
+              serviceName: {{ $fullName }}-server
               servicePort: http
         {{- end }}
   {{- end }}

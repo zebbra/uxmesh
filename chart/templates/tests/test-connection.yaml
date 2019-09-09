@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args:  ['{{ include "uxmesh.fullname" . }}:{{ .Values.service.port }}']
+      args:  ['{{ include "uxmesh.fullname" . }}:{{ .Values.server.service.port }}']
   restartPolicy: Never

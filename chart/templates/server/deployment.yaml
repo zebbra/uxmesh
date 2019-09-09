@@ -1,20 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "uxmesh.fullname" . }}
+  name: {{ include "uxmesh.fullname" . }}-server
   labels:
 {{ include "uxmesh.labels" . | indent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.server.replicaCount }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "uxmesh.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: server
   template:
     metadata:
       labels:
         app.kubernetes.io/name: {{ include "uxmesh.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: server
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -23,6 +25,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: ["npm", "run", "server"]
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -37,16 +40,16 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
+            {{- toYaml .Values.server.resources | nindent 12 }}
+      {{- with .Values.server.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+    {{- with .Values.server.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.tolerations }}
+    {{- with .Values.server.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

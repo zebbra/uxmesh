@@ -25,60 +25,28 @@ depends_on:
   - test
 
 steps:
-  - name: build-server
+  - name: build
     image: plugins/docker
     settings:
       username: { from_secret: quay_username }
       password: { from_secret: quay_password }
       registry: quay.io
-      repo: quay.io/zebbra/uxmesh-server
+      repo: quay.io/zebbra/uxmesh
       tags: 'latest,${DRONE_COMMIT_SHA:0:7}'
-      cache_from: quay.io/zebbra/uxmesh-server:latest
+      cache_from: quay.io/zebbra/uxmesh:latest
       custom_labels: [quay.expires-after=30d]
       mtu: 1376
-      dockerfile: Dockerfile.server.prod
 
-  - name: deploy-server
+  - name: deploy
     image: quay.io/ipedrazas/drone-helm
     environment:
       API_SERVER: https://kubernetes.default
       KUBERNETES_TOKEN: { from_secret: kubernetes_token }
     settings:
-      chart: ./uxmesh
-      release: uxmesh-server
-      namespace: uxmesh-server
+      chart: ./chart
+      release: uxmesh
+      namespace: uxmesh
       values: image.tag=${DRONE_COMMIT_SHA:0:7}
-      values_files: [uxmesh/production-server.yaml]
+      values_files: [uxmesh/production.yaml]
       reuse_values: true
-      update_dependencies: true
       skip_tls_verify: true
-      dockerfile: Dockerfile.server.prod
-
-  - name: build-client
-    image: plugins/docker
-    settings:
-      username: { from_secret: quay_username }
-      password: { from_secret: quay_password }
-      registry: quay.io
-      repo: quay.io/zebbra/uxmesh-client
-      tags: 'latest,${DRONE_COMMIT_SHA:0:7}-client'
-      cache_from: quay.io/zebbra/uxmesh-client:latest
-      custom_labels: [quay.expires-after=30d]
-      mtu: 1376
-      dockerfile: Dockerfile.client.prod
-
-  - name: deploy-client
-    image: quay.io/ipedrazas/drone-helm
-    environment:
-      API_SERVER: https://kubernetes.default
-      KUBERNETES_TOKEN: { from_secret: kubernetes_token }
-    settings:
-      chart: ./uxmesh
-      release: uxmesh-client
-      namespace: uxmesh-client
-      values: image.tag=${DRONE_COMMIT_SHA:0:7}-client
-      values_files: [uxmesh/production-client.yaml]
-      reuse_values: true
-      update_dependencies: true
-      skip_tls_verify: true
-      dockerfile: Dockerfile.client.prod

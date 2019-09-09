@@ -1,0 +1,42 @@
+#
+# Chart: uxmesh
+#
+
+image:
+  tag: 12345
+
+imagePullSecrets:
+  - name: zebbra-kube-pull-secret
+
+server:
+  ingress:
+    enabled: true
+    annotations:
+      # kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: 'true'
+    hosts:
+      - host: uxmesh.k8s.zebbra.ch
+        paths:
+          - /
+    tls:
+      - secretName: uxmesh-tls
+        hosts:
+          - uxmesh.k8s.zebbra.ch
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+client:
+  replicaCount: 3
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi

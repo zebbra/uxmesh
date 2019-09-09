@@ -1,2 +1,7 @@
-node_modules
-npm-debug.log
+/node_modules
+/npm-debug.log
+/.git
+/chart
+
+# Don't include gifs
+/cisco_*.gif
