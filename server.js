@@ -52,10 +52,12 @@ serverPolling()
 
 //and the magic goes on...
 io.on('connection', socket => {
+  console.log('clientIP', socket.handshake.address)
   socklist[socket.id] = {
     id: ++socketCounter, // _.keys(socklist).length
     active: true,
-    stats: {}
+    stats: {},
+    clientIp: socket.handshake.address
   }
   socklist_reverse[socklist[socket.id].id] = socket.id
 
