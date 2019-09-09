@@ -180,6 +180,10 @@ module.exports = class DataChannel {
       console.log('close???')
       this.shutdown()
     })
+    this.peer.on('error', error => {
+      console.log('error on peer connection', error)
+      this.shutdown()
+    })
     peers[this.peerId] = this.peer
   }
 

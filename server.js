@@ -52,10 +52,12 @@ serverPolling()
 
 //and the magic goes on...
 io.on('connection', socket => {
+  console.log('clientIP', socket.handshake.address)
   socklist[socket.id] = {
     id: ++socketCounter, // _.keys(socklist).length
     active: true,
-    stats: {}
+    stats: {},
+    clientIp: socket.handshake.address
   }
   socklist_reverse[socklist[socket.id].id] = socket.id
 
@@ -160,6 +162,7 @@ function serverPolling() {
         const rep = report[stat.channel]
 
         if (stat.initiator) {
+          rep.clientIp = sock.clientIp
           rep.from = sock.id
           rep.to = stat.peerId
           rep.speed = stat.speed
@@ -275,6 +278,12 @@ function serverPolling() {
         !isNaN(element[2])
       )
     })
+
+    // if (!isDatareportConsistent(data)) {
+    // console.log('data report inonsistent, sanitizing...')
+    //data = sanitize(data)
+    // }
+
     emitter.publish(JSON.stringify(data))
     console.log('stats ', new Date(), '\n===========\n', data, '\n')
   } catch (e) {
@@ -282,4 +291,62 @@ function serverPolling() {
   }
   //setInterval vs setTimeout: setTimeout executes every "function execution time + given timeout", setInterval executes "every given interval time"
   setTimeout(serverPolling, 5000)
+}
+
+function sanitize(report) {
+  const amountOfPeers = getUniqIds(report).length
+
+  const exactAmountAPeerHasToOccure =
+    (amountOfPeers * amountOfPeers - amountOfPeers) / amountOfPeers
+
+  const flatReport = getFlatPeers(report)
+
+  let sanitizedReport = report
+
+  console.log('----- start sanitizing -----')
+  console.log('report to sanitize: ', report)
+  getUniqIds(report).forEach(peer => {
+    const peerOccurences =
+      _.sumBy(flatReport, flatPeer => {
+        if (flatPeer === peer) return 1
+        else return 0
+      }) / 2
+
+    console.log('peerOccurences: ', peerOccurences)
+
+    if (peerOccurences !== exactAmountAPeerHasToOccure) {
+      sanitizedReport = sanitizedReport.filter(peerPair => {
+        return !(peer === peerPair[0] || peer === peerPair[1])
+      })
+    }
+  })
+  console.log('----- end sanitizing -----')
+  console.log('amountOfPeers: ', amountOfPeers)
+  console.log('exactAmountAPeerHasToOccure: ', exactAmountAPeerHasToOccure)
+  console.log('sanitizedReport: ', sanitizedReport)
+  return sanitizedReport
+}
+
+function isDatareportConsistent(report) {
+  if (report) {
+    const amountOfPeers = getUniqIds(report).length
+    const sizeOfReport = report.length
+
+    console.log('amountOfPeers', amountOfPeers)
+    console.log('sizeOfReport', sizeOfReport)
+    return amountOfPeers * amountOfPeers - amountOfPeers === sizeOfReport
+  }
+  return false
+}
+
+function getUniqIds(data) {
+  let flattenAndWithoutNumbers = getFlatPeers(data)
+
+  return [...new Set(flattenAndWithoutNumbers)] //return new array with Set constructor, to avoid dupplicates
+}
+
+function getFlatPeers(data) {
+  return [].concat(...data).filter(item => {
+    return parseInt(item) != item //get rid of last column which contains only numbers, we just need to proceed with the string-id's
+  })
 }

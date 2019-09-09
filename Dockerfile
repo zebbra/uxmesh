@@ -1,10 +1,9 @@
-FROM node:10
+FROM node:carbon-slim
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    net-tools \
-  && apt-get install -y \
-    tcpdump \
+  net-tools \
+  tcpdump \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -13,5 +12,5 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-EXPOSE 3001
 CMD npm run server
+
