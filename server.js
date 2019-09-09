@@ -278,7 +278,7 @@ function serverPolling() {
 
     // if (!isDatareportConsistent(data)) {
     console.log('data report inonsistent, sanitizing...')
-    data = sanitize(data)
+    //data = sanitize(data)
     // }
 
     emitter.publish(JSON.stringify(data))

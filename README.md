@@ -82,15 +82,16 @@ npm run server
 docker build -f Dockerfile.prod.server -t uxmesh:server .
 ```
 
-#### ...or use the public image on dockerhub, and...
+#### ...or use the public image on quqy.io, and...
 
-```docker pull uxmesh-server```
+```quay.io/zebbra/uxmesh-server:```
 
 ...proceed docker deployment as your enviroment demands
 
 ### open graphical UI
 
 type in browser: `your-domain-of-your-uxmesh-server/`
+apart from the graphical interface your browser operates as a client as well and starts to send peer information accross the network to all registered peers.
 
 
 ## setup and run the client
@@ -118,6 +119,7 @@ npm run client http://uxmeshserver.your-domain.com
 
 type in your browser: `your-domain-of-your-uxmesh-server`
 default is `https://uxmesh.k8s.kubernetes.zebbra.ch` 
+apart from the graphical interface your browser operates as a client as well and starts to send peer information accross the network to all registered peers.
 
 ### deployment with docker
 
@@ -128,7 +130,7 @@ docker build -f Dockerfile.prod.client -t uxmesh:client .
 
 #### ...or use the public image on dockerhub, and...
 
-```docker pull uxmesh-client```
+```quay.io/zebbra/uxmesh-client:latest```
 
 ...proceed docker deployment as your enviroment demands
 
