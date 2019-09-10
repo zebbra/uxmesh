@@ -278,6 +278,7 @@ function sanitize(report) {
           return true
         }
         console.log('deleted, bcause invalid: ', peer)
+
         peersToKill.push(peer)
         return false
       })
