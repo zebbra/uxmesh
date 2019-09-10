@@ -113,6 +113,7 @@ module.exports = class DataChannel {
     })
     this.peer.on('error', e => {
       debug('Error sending connection to peer %s:', this.peerId, e)
+      this.shutdown()
     })
     this.peer.on('connect', () => {
       debug('Peer connection established', 'initiator', this.config.initiator) //"channel", peer._channel);
@@ -178,10 +179,6 @@ module.exports = class DataChannel {
     })
     this.peer.on('close', data => {
       console.log('close???')
-      this.shutdown()
-    })
-    this.peer.on('error', error => {
-      console.log('error on peer connection', error)
       this.shutdown()
     })
     peers[this.peerId] = this.peer

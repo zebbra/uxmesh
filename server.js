@@ -52,17 +52,15 @@ serverPolling()
 
 //and the magic goes on...
 io.on('connection', socket => {
-  console.log('clientIP', socket.handshake.address)
   socklist[socket.id] = {
     id: ++socketCounter, // _.keys(socklist).length
     active: true,
-    stats: {},
-    clientIp: socket.handshake.address
+    stats: {}
   }
   socklist_reverse[socklist[socket.id].id] = socket.id
 
   debug('Connection with ID:', socklist[socket.id].id)
-  //console.log(io.sockets.connected)
+
   const peersToAdvertise = _.chain(io.sockets.connected)
     .values()
     .filter(s => {
@@ -101,7 +99,9 @@ io.on('connection', socket => {
 
     socket2.emit('signal', {
       signal: data.signal,
-      peerId: socklist[socket.id].id //socket.id
+      peerId: socklist[socket.id].id, //socket.id
+      sourceSocketId: socket2.id,
+      sourcePeerId: socklist[socket2.id].id
     })
   })
 
@@ -162,7 +162,6 @@ function serverPolling() {
         const rep = report[stat.channel]
 
         if (stat.initiator) {
-          rep.clientIp = sock.clientIp
           rep.from = sock.id
           rep.to = stat.peerId
           rep.speed = stat.speed

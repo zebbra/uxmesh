@@ -8,6 +8,8 @@ const debug = require('debug')('client')
 const socket = io.connect(process.argv[2] || 'https://uxmesh.k8s.zebbra.ch/')
 let datachannels = []
 
+this.myPeerId = undefined
+
 socket.on('connect', () => {
   debug('Connected to signalling server, Socket ID: %s', socket.id)
   const report = () => {
@@ -42,12 +44,22 @@ socket.on('error', err => {
 
 socket.on('peer', data => {
   debug('client onPeer', data)
+
   let dc = new DataChannel(data, socket)
   datachannels.push(dc)
 })
 
 socket.on('signal', data => {
+  storeMyPeerId(data.sourcePeerId)
+
   for (let dc of datachannels) {
     dc.socketSignal(data)
   }
 })
+
+function storeMyPeerId(myPeerId) {
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('myPeerId', myPeerId)
+    this.myPeerId = myPeerId
+  } else this.myPeerId = myPeerId
+}
