@@ -204,11 +204,11 @@ function serverPolling() {
       console.log(
         'data report inonsistent, broken peers in the network. no data will be sent to clients. sanitizing necessary....'
       )
-    } else {
-      //as we generate the report in this interval, we spread it to our subscribers with the emitter.publish function
-      emitter.publish(JSON.stringify(data))
-      console.log('stats ', new Date(), '\n===========\n', data, '\n')
+      data = sanitize(data)
     }
+    //as we generate the report in this interval, we spread it to our subscribers with the emitter.publish function
+    emitter.publish(JSON.stringify(data))
+    console.log('stats ', new Date(), '\n===========\n', data, '\n')
   } catch (e) {
     console.log('serverPolling -> ' + e.message)
   }
@@ -218,14 +218,27 @@ function serverPolling() {
 
 function isDatareportConsistent(report) {
   if (report) {
-    const amountOfPeers = getUniqIds(report).length
+    const amountOfPeers = getAmountOfPeers(report)
     const sizeOfReport = report.length
 
     console.log('amountOfPeers', amountOfPeers)
     console.log('sizeOfReport', sizeOfReport)
-    return amountOfPeers * amountOfPeers - amountOfPeers === sizeOfReport
+
+    return getExactAmountOfReportSize(amountOfPeers) === sizeOfReport
   }
   return false
+}
+
+function getAmountOfPeers(report) {
+  return getUniqIds(report).length
+}
+
+function getExactAmountOfReportSize(amountOfPeers) {
+  return amountOfPeers * amountOfPeers - amountOfPeers
+}
+
+function getExactAmountAPeerHasToOccure(reportSize, amountOfPeers) {
+  return Math.sqrt(reportSize + amountOfPeers)
 }
 
 function getUniqIds(data) {
@@ -238,4 +251,45 @@ function getFlatPeers(data) {
   return [].concat(...data).filter(item => {
     return parseInt(item) != item //get rid of last column which contains only numbers, we just need to proceed with the string-id's
   })
+}
+
+function sanitize(report) {
+  console.log('----- start sanitizing -----')
+
+  const uniqIds = getUniqIds(report)
+  const amountOfPeers = getAmountOfPeers(report)
+  const exactAmountAPeerHasToOccure = getExactAmountAPeerHasToOccure(
+    report.length,
+    amountOfPeers
+  )
+  const flatReport = getFlatPeers(report)
+
+  let sanitizedReport = report
+
+  console.log('flatReport', flatReport)
+
+  uniqIds.forEach(peer => {
+    const peerOccurences = _.sumBy(flatReport, flatPeer => {
+      if (flatPeer === peer) return 1
+      else return 0
+    })
+
+    console.log('occurences for ', peer, ':', peerOccurences)
+    console.log('exactAmountAPeerHasToOccure: ', exactAmountAPeerHasToOccure)
+
+    if (peerOccurences !== exactAmountAPeerHasToOccure) {
+      sanitizedReport = sanitizedReport.filter(peerPair => {
+        if (!(peer === peerPair[0] || peer === peerPair[1])) {
+          return true
+        }
+        console.log('deleted, bcause invalid: ', peer)
+        return false
+      })
+    }
+  })
+
+  console.log('sanitizedReport: ', sanitizedReport)
+  console.log('----- end sanitizing -----')
+
+  return sanitizedReport
 }
