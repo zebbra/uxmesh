@@ -32,10 +32,7 @@ socket.on('connect', () => {
 
 socket.on('disconnect', () => {
   debug('websocket closed, killing peers')
-  for (let dc of datachannels) {
-    dc.shutdown()
-  }
-  datachannels = []
+  killAndClose()
 })
 
 socket.on('error', err => {
@@ -56,6 +53,18 @@ socket.on('signal', data => {
     dc.socketSignal(data)
   }
 })
+
+socket.on('kill', () => {
+  debug('kill requested, so killing all peers')
+  killAndClose()
+})
+
+function killAndClose() {
+  for (let dc of datachannels) {
+    dc.shutdown()
+  }
+  datachannels = []
+}
 
 function storeMyPeerId(myPeerId) {
   if (typeof localStorage !== 'undefined') {

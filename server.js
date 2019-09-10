@@ -255,7 +255,7 @@ function sanitize(report) {
     getAmountOfPeers(report)
   )
   const flatReport = getFlatPeers(report)
-
+  const peersToKill = []
   let sanitizedReport = report
 
   console.log('----- start sanitizing -----')
@@ -278,13 +278,34 @@ function sanitize(report) {
           return true
         }
         console.log('deleted, bcause invalid: ', peer)
+        peersToKill.push(peer)
         return false
       })
     }
   })
 
+  //TODO: maybe there is a bestpractice to restart broken peers? to kill clients by event wont work.
+  //killPeers(peersToKill)
+
   console.log('sanitized report', sanitizedReport)
   console.log('----- end sanitizing -----')
 
   return sanitizedReport
+}
+
+function killPeers(peersToKill) {
+  peersToKill.forEach(peer => {
+    const peerIdToKill = _.first(peer.match(/\d+/g).map(Number))
+
+    const sockId = socklist_reverse[peerIdToKill]
+    const socketToKill = io.sockets.connected[sockId]
+
+    if (socketToKill) {
+      socketToKill.emit('kill', {}, () => {
+        console.log('socket and peer with id', peerIdToKill, 'killed')
+      })
+      delete socklist[sockId]
+      cleanUp(peerIdToKill)
+    }
+  })
 }
