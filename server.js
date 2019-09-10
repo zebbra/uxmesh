@@ -279,52 +279,17 @@ function serverPolling() {
       )
     })
 
-    // if (!isDatareportConsistent(data)) {
-    // console.log('data report inonsistent, sanitizing...')
-    //data = sanitize(data)
-    // }
-
-    emitter.publish(JSON.stringify(data))
-    console.log('stats ', new Date(), '\n===========\n', data, '\n')
+    if (!isDatareportConsistent(data)) {
+      console.log('data report inonsistent, broken peers in the network...')
+    } else {
+      emitter.publish(JSON.stringify(data))
+      console.log('stats ', new Date(), '\n===========\n', data, '\n')
+    }
   } catch (e) {
     console.log('serverPolling -> ' + e.message)
   }
   //setInterval vs setTimeout: setTimeout executes every "function execution time + given timeout", setInterval executes "every given interval time"
   setTimeout(serverPolling, 5000)
-}
-
-function sanitize(report) {
-  const amountOfPeers = getUniqIds(report).length
-
-  const exactAmountAPeerHasToOccure =
-    (amountOfPeers * amountOfPeers - amountOfPeers) / amountOfPeers
-
-  const flatReport = getFlatPeers(report)
-
-  let sanitizedReport = report
-
-  console.log('----- start sanitizing -----')
-  console.log('report to sanitize: ', report)
-  getUniqIds(report).forEach(peer => {
-    const peerOccurences =
-      _.sumBy(flatReport, flatPeer => {
-        if (flatPeer === peer) return 1
-        else return 0
-      }) / 2
-
-    console.log('peerOccurences: ', peerOccurences)
-
-    if (peerOccurences !== exactAmountAPeerHasToOccure) {
-      sanitizedReport = sanitizedReport.filter(peerPair => {
-        return !(peer === peerPair[0] || peer === peerPair[1])
-      })
-    }
-  })
-  console.log('----- end sanitizing -----')
-  console.log('amountOfPeers: ', amountOfPeers)
-  console.log('exactAmountAPeerHasToOccure: ', exactAmountAPeerHasToOccure)
-  console.log('sanitizedReport: ', sanitizedReport)
-  return sanitizedReport
 }
 
 function isDatareportConsistent(report) {
