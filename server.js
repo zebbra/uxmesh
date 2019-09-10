@@ -280,6 +280,8 @@ function sanitize(report) {
         console.log('deleted, bcause invalid: ', peer)
 
         peersToKill.push(peer)
+        cleanUp(peer)
+
         return false
       })
     }
