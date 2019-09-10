@@ -192,84 +192,6 @@ function serverPolling() {
       data.push(dataEntry2)
     })
 
-    //mocked Data for testing
-    // let data = [
-    //     ['peer1', 'peer2', 232],
-    //     ['peer1', 'peer3', 323],
-    //     ['peer1', 'peer4', 324],
-    //     ['peer1', 'peer5', 123],
-    //     ['peer1', 'peer6', 434],
-    //     ['peer1', 'peer7', 135],
-    //     ['peer1', 'peer8', 335],
-    //     ['peer1', 'peer9', 332],
-    //     ['peer2', 'peer1', 232],
-    //     ['peer2', 'peer3', 34],
-    //     ['peer2', 'peer4', 21],
-    //     ['peer2', 'peer5', 67],
-    //     ['peer2', 'peer6', 11],
-    //     ['peer2', 'peer7', 12],
-    //     ['peer2', 'peer8', 67],
-    //     ['peer2', 'peer9', 69],
-    //     ['peer3', 'peer1', 553],
-    //     ['peer3', 'peer2', 47],
-    //     ['peer3', 'peer4', 89],
-    //     ['peer3', 'peer5', 46],
-    //     ['peer3', 'peer6', 22],
-    //     ['peer3', 'peer7', 31],
-    //     ['peer3', 'peer8', 48],
-    //     ['peer3', 'peer9', 22],
-    //     ['peer4', 'peer1', 332],
-    //     ['peer4', 'peer2', 62],
-    //     ['peer4', 'peer3', 23],
-    //     ['peer4', 'peer5', 57],
-    //     ['peer4', 'peer6', 62],
-    //     ['peer4', 'peer7', 46],
-    //     ['peer4', 'peer8', 98],
-    //     ['peer4', 'peer9', 97],
-    //     ['peer5', 'peer1', 443],
-    //     ['peer5', 'peer2', 32],
-    //     ['peer5', 'peer3', 34],
-    //     ['peer5', 'peer4', 56],
-    //     ['peer5', 'peer6', 34],
-    //     ['peer5', 'peer7', 77],
-    //     ['peer5', 'peer8', 45],
-    //     ['peer5', 'peer9', 43],
-    //     ['peer6', 'peer1', 765],
-    //     ['peer6', 'peer2', 15],
-    //     ['peer6', 'peer3', 66],
-    //     ['peer6', 'peer4', 44],
-    //     ['peer6', 'peer5', 73],
-    //     ['peer6', 'peer7', 43],
-    //     ['peer6', 'peer8', 78],
-    //     ['peer6', 'peer9', 35],
-    //     ['peer7', 'peer1', 453],
-    //     ['peer7', 'peer2', 34],
-    //     ['peer7', 'peer3', 12],
-    //     ['peer7', 'peer4', 67],
-    //     ['peer7', 'peer5', 85],
-    //     ['peer7', 'peer6', 45],
-    //     ['peer7', 'peer8', 63],
-    //     ['peer7', 'peer9', 23],
-    //     ['peer8', 'peer1', 453],
-    //     ['peer8', 'peer2', 13],
-    //     ['peer8', 'peer3', 43],
-    //     ['peer8', 'peer4', 54],
-    //     ['peer8', 'peer5', 67],
-    //     ['peer8', 'peer6', 74],
-    //     ['peer8', 'peer7', 23],
-    //     ['peer8', 'peer9', 25],
-    //     ['peer9', 'peer1', 544],
-    //     ['peer9', 'peer2', 54],
-    //     ['peer9', 'peer3', 87],
-    //     ['peer9', 'peer4', 94],
-    //     ['peer9', 'peer5', 44],
-    //     ['peer9', 'peer6', 36],
-    //     ['peer9', 'peer7', 23],
-    //     ['peer9', 'peer8', 25]
-    // ];
-
-    //as we generate the report in this interval, we spread it to our subscribers with the emitter.publish function
-
     data = data.filter(element => {
       return (
         element[0].indexOf('undefined') === -1 &&
@@ -280,10 +202,10 @@ function serverPolling() {
 
     if (!isDatareportConsistent(data)) {
       console.log(
-        'data report inonsistent, broken peers in the network... suicide'
+        'data report inonsistent, broken peers in the network. no data will be sent to clients. sanitizing necessary....'
       )
-      process.exit(0)
     } else {
+      //as we generate the report in this interval, we spread it to our subscribers with the emitter.publish function
       emitter.publish(JSON.stringify(data))
       console.log('stats ', new Date(), '\n===========\n', data, '\n')
     }
