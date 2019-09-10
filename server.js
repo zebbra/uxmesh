@@ -279,7 +279,10 @@ function serverPolling() {
     })
 
     if (!isDatareportConsistent(data)) {
-      console.log('data report inonsistent, broken peers in the network...')
+      console.log(
+        'data report inonsistent, broken peers in the network... suicide'
+      )
+      process.exit(0)
     } else {
       emitter.publish(JSON.stringify(data))
       console.log('stats ', new Date(), '\n===========\n', data, '\n')
