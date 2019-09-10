@@ -219,12 +219,8 @@ function serverPolling() {
 function isDatareportConsistent(report) {
   if (report) {
     const amountOfPeers = getAmountOfPeers(report)
-    const sizeOfReport = report.length
 
-    console.log('amountOfPeers', amountOfPeers)
-    console.log('sizeOfReport', sizeOfReport)
-
-    return getExactAmountOfReportSize(amountOfPeers) === sizeOfReport
+    return getExpectedLengthOfReport(amountOfPeers) === report.length
   }
   return false
 }
@@ -233,12 +229,12 @@ function getAmountOfPeers(report) {
   return getUniqIds(report).length
 }
 
-function getExactAmountOfReportSize(amountOfPeers) {
+function getExpectedLengthOfReport(amountOfPeers) {
   return amountOfPeers * amountOfPeers - amountOfPeers
 }
 
-function getExactAmountAPeerHasToOccure(reportSize, amountOfPeers) {
-  return Math.sqrt(reportSize + amountOfPeers)
+function getExactAmountAPeerHasToOccure(amountOfPeers) {
+  return (amountOfPeers * amountOfPeers - amountOfPeers) / amountOfPeers
 }
 
 function getUniqIds(data) {
@@ -254,28 +250,27 @@ function getFlatPeers(data) {
 }
 
 function sanitize(report) {
-  console.log('----- start sanitizing -----')
-
   const uniqIds = getUniqIds(report)
-  const amountOfPeers = getAmountOfPeers(report)
   const exactAmountAPeerHasToOccure = getExactAmountAPeerHasToOccure(
-    report.length,
-    amountOfPeers
+    getAmountOfPeers(report)
   )
   const flatReport = getFlatPeers(report)
 
   let sanitizedReport = report
 
-  console.log('flatReport', flatReport)
+  console.log('----- start sanitizing -----')
+  console.log('report', report)
+  console.log('amountOfPeers', getAmountOfPeers(report))
+  console.log('exactAmountAPeerHasToOccure: ', exactAmountAPeerHasToOccure)
 
   uniqIds.forEach(peer => {
-    const peerOccurences = _.sumBy(flatReport, flatPeer => {
-      if (flatPeer === peer) return 1
-      else return 0
-    })
+    const peerOccurences =
+      _.sumBy(flatReport, flatPeer => {
+        if (flatPeer === peer) return 1
+        else return 0
+      }) / 2 // we check for 1/2 because, each peer appears twice in the report
 
     console.log('occurences for ', peer, ':', peerOccurences)
-    console.log('exactAmountAPeerHasToOccure: ', exactAmountAPeerHasToOccure)
 
     if (peerOccurences !== exactAmountAPeerHasToOccure) {
       sanitizedReport = sanitizedReport.filter(peerPair => {
@@ -288,7 +283,7 @@ function sanitize(report) {
     }
   })
 
-  console.log('sanitizedReport: ', sanitizedReport)
+  console.log('sanitized report', sanitizedReport)
   console.log('----- end sanitizing -----')
 
   return sanitizedReport
