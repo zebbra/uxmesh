@@ -5,9 +5,7 @@ require('debug').enable('client')
 const DataChannel = require('./datachannel')
 const io = require('socket.io-client')
 const debug = require('debug')('client')
-const socket = io.connect(
-  process.argv[2] || 'http://localhost:3001' || 'https://uxmesh.k8s.zebbra.ch/'
-)
+const socket = io.connect(process.argv[2] || 'https://uxmesh.k8s.zebbra.ch/')
 let datachannels = []
 
 this.myPeerId = undefined
