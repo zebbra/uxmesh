@@ -76,7 +76,7 @@ function buildIdsWithSpeed(data) {
       }
     })
 
-    idsWithSpeed[uniqId] = { speed: speed }
+    idsWithSpeed[uniqId] = { speed: Math.round(speed) }
   })
 
   globalIdsWithSpeed = idsWithSpeed
