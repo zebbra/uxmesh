@@ -9,7 +9,6 @@ let wrtc = null
 
 require('debug').enable('dc')
 
-let increase = 1 // max 50 seems to be good
 const SLEEPTIME = 20 - 1
 
 isNode = () => process.title === 'node'
@@ -18,7 +17,7 @@ if (isNode()) {
   wrtc = require('wrtc')
   debug('init on node')
   process.on('unhandledRejection', error => {
-    // Will print "unhandledRejection err is not defined"
+    // Will print "unhandledRejection error is not defined"
     console.log('unhandledRejection', error.stack)
     //throw(error)
     process.exit(0)
@@ -41,12 +40,10 @@ module.exports = class DataChannel {
     this.config = {
       initiator: params.initiator,
       trickle: useTrickle,
-      //channelName: process.argv[3],
       channelConfig: {
         ordered: false, // not sure which to use: https://w3c.github.io/webrtc-pc/#dom-rtcdatachannel
         reliable: false,
         maxRetransmits: 0
-        //maxPacketLifeTime: 0 // segfault?
       },
       objectMode: false
     }

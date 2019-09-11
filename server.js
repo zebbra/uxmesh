@@ -9,8 +9,6 @@ const io = require('socket.io')(server)
 const pd = require('pretty-data').pd
 const emitter = require('./sseEmitter')
 
-//const measured = require('measured')
-
 const DEFAULT_PEER_COUNT = 50
 const socklist = {}
 const socklist_reverse = {}
@@ -266,8 +264,6 @@ function serverPolling() {
     //     ['peer9', 'peer8', 25]
     // ];
 
-    //as we generate the report in this interval, we spread it to our subscribers with the emitter.publish function
-
     data = data.filter(element => {
       return (
         element[0].indexOf('undefined') === -1 &&
@@ -275,6 +271,7 @@ function serverPolling() {
         !isNaN(element[2])
       )
     })
+    //as we generate the report in this interval, we spread it to our subscribers with the emitter.publish function
     emitter.publish(JSON.stringify(data))
     console.log('stats ', new Date(), '\n===========\n', data, '\n')
   } catch (e) {
