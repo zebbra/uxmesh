@@ -204,7 +204,7 @@ function serverPolling() {
       console.log(
         'data report inonsistent, broken peers in the network. no data will be sent to clients. sanitizing necessary....'
       )
-      data = sanitize(data)
+      // data = sanitize(data)
     }
     //as we generate the report in this interval, we spread it to our subscribers with the emitter.publish function
     emitter.publish(JSON.stringify(data))
@@ -273,13 +273,17 @@ function sanitize(report) {
     console.log('occurences for ', peer, ':', peerOccurences)
 
     if (peerOccurences !== exactAmountAPeerHasToOccure) {
-      sanitizedReport.forEach(peerPair => {
-        if (peer === peerPair[0] || peer === peerPair[1]) {
-          console.log('deleted, bcause invalid: ', peer)
+      sanitizedReport = sanitizedReport.filter(peerPair => {
+        if (!(peer === peerPair[0] || peer === peerPair[1])) {
+          return true
         }
+        console.log('deleted, bcause invalid: ', peer)
+
         peersToKill.push(peer)
+        cleanUp(peer)
+
+        return false
       })
-      killPeers(peersToKill)
     }
   })
 
@@ -300,8 +304,11 @@ function killPeers(peersToKill) {
     const socketToKill = io.sockets.connected[sockId]
 
     if (socketToKill) {
-      socketToKill.emit('kill')
+      socketToKill.emit('kill', {}, () => {
+        console.log('socket and peer with id', peerIdToKill, 'killed')
+      })
       delete socklist[sockId]
+      cleanUp(peerIdToKill)
     }
   })
 }
