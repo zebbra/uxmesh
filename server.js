@@ -263,7 +263,7 @@ function sanitize(report) {
   console.log('amountOfPeers', getAmountOfPeers(report))
   console.log('exactAmountAPeerHasToOccure: ', exactAmountAPeerHasToOccure)
 
-  uniqIds.forEach(peer => {
+  for (let peer of uniqIds) {
     const peerOccurences =
       _.sumBy(flatReport, flatPeer => {
         if (flatPeer === peer) return 1
@@ -283,8 +283,9 @@ function sanitize(report) {
 
         return false
       })
+      break // break, because we like to sanitize only once per report generation
     }
-  })
+  }
 
   //TODO: maybe there is a bestpractice to restart broken peers? to kill clients by event wont work.
   //killPeers(peersToKill)
