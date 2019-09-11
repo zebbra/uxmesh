@@ -58,7 +58,7 @@ io.on('connection', socket => {
   socklist_reverse[socklist[socket.id].id] = socket.id
 
   debug('Connection with ID:', socklist[socket.id].id)
-  //console.log(io.sockets.connected)
+
   const peersToAdvertise = _.chain(io.sockets.connected)
     .values()
     .filter(s => {
@@ -97,7 +97,9 @@ io.on('connection', socket => {
 
     socket2.emit('signal', {
       signal: data.signal,
-      peerId: socklist[socket.id].id //socket.id
+      peerId: socklist[socket.id].id, //socket.id
+      sourceSocketId: socket2.id,
+      sourcePeerId: socklist[socket2.id].id
     })
   })
 
@@ -271,6 +273,12 @@ function serverPolling() {
         !isNaN(element[2])
       )
     })
+    if (!isDatareportConsistent(data)) {
+      console.log(
+        'data report inonsistent, broken peers in the network. no data will be sent to clients. sanitizing necessary....'
+      )
+      data = sanitize(data)
+    }
     //as we generate the report in this interval, we spread it to our subscribers with the emitter.publish function
     emitter.publish(JSON.stringify(data))
     console.log('stats ', new Date(), '\n===========\n', data, '\n')
@@ -279,4 +287,66 @@ function serverPolling() {
   }
   //setInterval vs setTimeout: setTimeout executes every "function execution time + given timeout", setInterval executes "every given interval time"
   setTimeout(serverPolling, 5000)
+}
+
+function isDatareportConsistent(report) {
+  if (report) {
+    const amountOfPeers = getAmountOfPeers(report)
+
+    return getExpectedLengthOfReport(amountOfPeers) === report.length
+  }
+  return false
+}
+
+function getAmountOfPeers(report) {
+  return getUniqIds(report).length
+}
+
+function getExpectedLengthOfReport(amountOfPeers) {
+  return amountOfPeers * amountOfPeers - amountOfPeers
+}
+
+function getExactAmountAPeerHasToOccure(amountOfPeers) {
+  return (amountOfPeers * amountOfPeers - amountOfPeers) / amountOfPeers
+}
+
+function getUniqIds(data) {
+  let flattenAndWithoutNumbers = getFlatPeers(data)
+
+  return [...new Set(flattenAndWithoutNumbers)] //return new array with Set constructor, to avoid dupplicates
+}
+
+function getFlatPeers(data) {
+  return [].concat(...data).filter(item => {
+    return parseInt(item) != item //get rid of last column which contains only numbers, we just need to proceed with the string-id's
+  })
+}
+
+function sanitize(report) {
+  const uniqIds = getUniqIds(report)
+
+  let sanitizedReport = report
+
+  for (let peer of uniqIds) {
+    if (!isDatareportConsistent(sanitizedReport)) {
+      const exactAmountAPeerHasToOccure = getExactAmountAPeerHasToOccure(
+        getAmountOfPeers(sanitizedReport)
+      )
+      const flatReport = getFlatPeers(sanitizedReport)
+
+      const peerOccurences =
+        _.sumBy(flatReport, flatPeer => {
+          if (flatPeer === peer) return 1
+          else return 0
+        }) / 2 // we check for 1/2 because, each peer appears twice in the report
+
+      if (peerOccurences < exactAmountAPeerHasToOccure) {
+        sanitizedReport = sanitizedReport.filter(peerPair => {
+          return !(peer === peerPair[0] || peer === peerPair[1])
+        })
+      }
+    }
+  }
+
+  return sanitizedReport
 }

@@ -5,8 +5,23 @@ require('debug').enable('client')
 const DataChannel = require('./datachannel')
 const io = require('socket.io-client')
 const debug = require('debug')('client')
-const socket = io.connect(process.argv[2] || 'http://localhost:3001') // FIXME
+const socket = io.connect(process.argv[2] || getConnectionUrl())
 let datachannels = []
+
+this.myPeerId = undefined
+
+function getConnectionUrl() {
+  if (iAmOnTheServer()) {
+    return '' //for this showcase we don't need a predefined uxmesh-server for the client
+  } else {
+    const urlParams = new URLSearchParams(window.location.search)
+    return urlParams.get('connectionUrl') || 'http://localhost:3001'
+  }
+}
+
+function iAmOnTheServer() {
+  return !(typeof window != 'undefined' && window.document)
+}
 
 socket.on('connect', () => {
   debug('Connected to signalling server, Socket ID: %s', socket.id)
@@ -25,15 +40,12 @@ socket.on('connect', () => {
       })
     }
   }
-  setInterval(report, 2000)
+  setInterval(report, 5000)
 })
 
 socket.on('disconnect', () => {
   debug('websocket closed, killing peers')
-  for (let dc of datachannels) {
-    dc.shutdown()
-  }
-  datachannels = []
+  killAndClose()
 })
 
 socket.on('error', err => {
@@ -42,12 +54,34 @@ socket.on('error', err => {
 
 socket.on('peer', data => {
   debug('client onPeer', data)
+
   let dc = new DataChannel(data, socket)
   datachannels.push(dc)
 })
 
 socket.on('signal', data => {
+  storeMyPeerId(data.sourcePeerId)
+
   for (let dc of datachannels) {
     dc.socketSignal(data)
   }
 })
+
+socket.on('kill', () => {
+  debug('kill requested, so killing all peers')
+  killAndClose()
+})
+
+function killAndClose() {
+  for (let dc of datachannels) {
+    dc.shutdown()
+  }
+  datachannels = []
+}
+
+function storeMyPeerId(myPeerId) {
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('myPeerId', myPeerId)
+    this.myPeerId = myPeerId
+  } else this.myPeerId = myPeerId
+}

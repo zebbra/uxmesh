@@ -38,7 +38,23 @@ module.exports = class DataChannel {
 
   _initPeer(params) {
     this.config = {
+      config: {
+        iceServers: [
+          {
+            urls: 'turn:numb.viagenie.ca',
+            username: 'cloedu@gmail.com',
+            credential: 'Cl4ud!087'
+          },
+          {
+            urls: 'turn:numb.viagenie.ca',
+            username: 'cloedu@gmail.com',
+            credential: 'Cl4ud!087'
+          }
+        ]
+      },
       initiator: params.initiator,
+      reconnectTimer: 100,
+      // iceTransportPolicy: 'relay',
       trickle: useTrickle,
       channelConfig: {
         ordered: false, // not sure which to use: https://w3c.github.io/webrtc-pc/#dom-rtcdatachannel
