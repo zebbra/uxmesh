@@ -72,6 +72,12 @@ Yay, Proactive Monitoring! Use the application recognition capabilities of Cisco
 - returns the list of all clients to each conneting client
 - provides a http endpoint and delivers the graphical UI to see fancy animations of the collected network data
 
+
+## Watch the showcase
+to see a showcase of an infrastructure with 4 uxmesh-clients and 1 uxmesh-server, visit https://uxmesh.k8s.zebbra.ch
+
+if you want to setup the szenario in your own network, then please continue reading...
+
 ## Server Setup
 
 ### Run the server from source
@@ -111,7 +117,7 @@ docker run uxmesh npm run server
 
 ##### Open graphical UI
 
-type in browser: `your-domain-of-your-uxmesh-server/`
+type in your browser: `https://uxmeshserver.your-domain.com/?connectionUrl=https://uxmeshserver.your-domain.com`
 apart from the graphical interface your browser operates as a client as well and starts to send peer information accross the network to all registered peers.
 
 ## Client Setup
@@ -141,13 +147,14 @@ npm run client
 Use optional parameter to set uxmesh-server address (default is http://localhost:3001):
 
 ```
-npm run client http://uxmeshserver.your-domain.com
+npm run client https://uxmeshserver.your-domain.com
 ```
 
 ### Run the client in the browser
 
-type in your browser: `your-domain-of-your-uxmesh-server`
-default is `https://uxmesh.k8s.zebbra.ch`
+type in your browser: `https://uxmeshserver.your-domain.com/?connectionUrl=https://uxmeshserver.your-domain.com`
+
+`connectionUrl` defaults to `http://localhost:3001`
 apart from the graphical interface your browser operates as a client as well and starts to send peer information accross the network to all registered peers.
 
 ### Run the client using docker

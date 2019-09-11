@@ -269,10 +269,7 @@ function sanitize(report) {
 
       if (peerOccurences < exactAmountAPeerHasToOccure) {
         sanitizedReport = sanitizedReport.filter(peerPair => {
-          if (!(peer === peerPair[0] || peer === peerPair[1])) {
-            return true
-          }
-          return false
+          return !(peer === peerPair[0] || peer === peerPair[1])
         })
       }
     }
