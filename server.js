@@ -255,7 +255,7 @@ function sanitize(report) {
   let sanitizedReport = report
 
   for (let peer of uniqIds) {
-    if (isDatareportConsistent(sanitizedReport)) {
+    if (!isDatareportConsistent(sanitizedReport)) {
       const exactAmountAPeerHasToOccure = getExactAmountAPeerHasToOccure(
         getAmountOfPeers(sanitizedReport)
       )
