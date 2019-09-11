@@ -72,7 +72,7 @@ Yay, Proactive Monitoring! Use the application recognition capabilities of Cisco
 - returns the list of all clients to each conneting client
 - provides a http endpoint and delivers the graphical UI to see fancy animations of the collected network data
 
-## Server setup
+## Server Setup
 
 ### Run the server from source
 
