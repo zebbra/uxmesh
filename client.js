@@ -5,10 +5,23 @@ require('debug').enable('client')
 const DataChannel = require('./datachannel')
 const io = require('socket.io-client')
 const debug = require('debug')('client')
-const socket = io.connect(process.argv[2] || 'https://uxmesh.k8s.zebbra.ch/')
+const socket = io.connect(process.argv[2] || getConnectionUrl())
 let datachannels = []
 
 this.myPeerId = undefined
+
+function getConnectionUrl() {
+  if (iAmOnTheServer()) {
+    return 'https://uxmesh.k8s.zebbra.ch'
+  } else {
+    const urlParams = new URLSearchParams(window.location.search)
+    return urlParams.get('connectionUrl') || 'http://localhost:3001'
+  }
+}
+
+function iAmOnTheServer() {
+  return !(typeof window != 'undefined' && window.document)
+}
 
 socket.on('connect', () => {
   debug('Connected to signalling server, Socket ID: %s', socket.id)

@@ -261,54 +261,22 @@ function sanitize(report) {
       )
       const flatReport = getFlatPeers(sanitizedReport)
 
-      console.log('----- start sanitizing -----')
-      console.log('report', sanitizedReport)
-      console.log('amountOfPeers', getAmountOfPeers(sanitizedReport))
-      console.log('exactAmountAPeerHasToOccure: ', exactAmountAPeerHasToOccure)
-
       const peerOccurences =
         _.sumBy(flatReport, flatPeer => {
           if (flatPeer === peer) return 1
           else return 0
         }) / 2 // we check for 1/2 because, each peer appears twice in the report
 
-      console.log('occurences for ', peer, ':', peerOccurences)
-
       if (peerOccurences < exactAmountAPeerHasToOccure) {
         sanitizedReport = sanitizedReport.filter(peerPair => {
           if (!(peer === peerPair[0] || peer === peerPair[1])) {
             return true
           }
-          console.log('deleted, bcause invalid: ', peer)
-
           return false
         })
       }
-    } else console.log('no sanitizing necessary')
+    }
   }
 
-  //TODO: maybe there is a bestpractice to restart broken peers? to kill clients by event wont work.
-  //killPeers(peersToKill)
-
-  console.log('sanitized report', sanitizedReport)
-  console.log('----- end sanitizing -----')
-
   return sanitizedReport
-}
-
-function killPeers(peersToKill) {
-  peersToKill.forEach(peer => {
-    const peerIdToKill = _.first(peer.match(/\d+/g).map(Number))
-
-    const sockId = socklist_reverse[peerIdToKill]
-    const socketToKill = io.sockets.connected[sockId]
-
-    if (socketToKill) {
-      socketToKill.emit('kill', {}, () => {
-        console.log('socket and peer with id', peerIdToKill, 'killed')
-      })
-      delete socklist[sockId]
-      cleanUp(peerIdToKill)
-    }
-  })
 }
