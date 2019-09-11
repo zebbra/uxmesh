@@ -7,18 +7,18 @@
 
 ![comics](http://wairoa.net/cartoons/support1.gif "user problem")
 
-# The story
+## The story
 
 Once upon a time, network troulbeshooting used to be easy. Just assume that that user is the problem, tell him/her to turn it on and off again and in 90% of the case, that worked wonders. Well, those times are over. Microsoft manages to build software that works (mostly without 24h reboots), the network has become truly mission critical and support people that  just blame the error on the user are no longer fashionable.
 
-# The Problem
+## The Problem
 
 Are your users sometimes complaining about network performance and you can’t give them a verified response because you’re missing a holistic end-to-end network performance monitoring?
 Is the problem on the user end side? Is is the network link or the switching infrastrucutre?
 Pinpointing the root case isn't easy and even thought there are many tools out there, they either focus on the network part or on the user side. 
 Now, what if you could run the same test scenario from withing the network as well as from the users computer? This even without installing anything on the users computer! And what if you could aggregate all this information on one simple screen and get a quick overview of what's going on? Does this sounds like a fairytale? 
 
-# Guess what ... [the solution]
+## Guess what ... [the solution]
 
 ... we just built a simple, yet very powerful soltuion to this problem!
 **UXmesh** is an end-to-end user experience monitoring tool, that brings real-life monitoring to a whole new level.
