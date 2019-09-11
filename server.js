@@ -284,7 +284,7 @@ function sanitize(report) {
           return false
         })
       }
-    }
+    } else console.log('no sanitizing necessary')
   }
 
   //TODO: maybe there is a bestpractice to restart broken peers? to kill clients by event wont work.
