@@ -204,7 +204,7 @@ function serverPolling() {
       console.log(
         'data report inonsistent, broken peers in the network. no data will be sent to clients. sanitizing necessary....'
       )
-      data = sanitize(data)
+      //data = sanitize(data)
     }
     //as we generate the report in this interval, we spread it to our subscribers with the emitter.publish function
     emitter.publish(JSON.stringify(data))
