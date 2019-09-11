@@ -251,39 +251,39 @@ function getFlatPeers(data) {
 
 function sanitize(report) {
   const uniqIds = getUniqIds(report)
-  const exactAmountAPeerHasToOccure = getExactAmountAPeerHasToOccure(
-    getAmountOfPeers(report)
-  )
-  const flatReport = getFlatPeers(report)
-  const peersToKill = []
+
   let sanitizedReport = report
 
-  console.log('----- start sanitizing -----')
-  console.log('report', report)
-  console.log('amountOfPeers', getAmountOfPeers(report))
-  console.log('exactAmountAPeerHasToOccure: ', exactAmountAPeerHasToOccure)
-
   for (let peer of uniqIds) {
-    const peerOccurences =
-      _.sumBy(flatReport, flatPeer => {
-        if (flatPeer === peer) return 1
-        else return 0
-      }) / 2 // we check for 1/2 because, each peer appears twice in the report
+    if (isDatareportConsistent(sanitizedReport)) {
+      const exactAmountAPeerHasToOccure = getExactAmountAPeerHasToOccure(
+        getAmountOfPeers(sanitizedReport)
+      )
+      const flatReport = getFlatPeers(sanitizedReport)
 
-    console.log('occurences for ', peer, ':', peerOccurences)
+      console.log('----- start sanitizing -----')
+      console.log('report', sanitizedReport)
+      console.log('amountOfPeers', getAmountOfPeers(sanitizedReport))
+      console.log('exactAmountAPeerHasToOccure: ', exactAmountAPeerHasToOccure)
 
-    if (peerOccurences < exactAmountAPeerHasToOccure) {
-      sanitizedReport = sanitizedReport.filter(peerPair => {
-        if (!(peer === peerPair[0] || peer === peerPair[1])) {
-          return true
-        }
-        console.log('deleted, bcause invalid: ', peer)
+      const peerOccurences =
+        _.sumBy(flatReport, flatPeer => {
+          if (flatPeer === peer) return 1
+          else return 0
+        }) / 2 // we check for 1/2 because, each peer appears twice in the report
 
-        peersToKill.push(peer)
+      console.log('occurences for ', peer, ':', peerOccurences)
 
-        return false
-      })
-      break // break, because we like to sanitize only once per report generation
+      if (peerOccurences < exactAmountAPeerHasToOccure) {
+        sanitizedReport = sanitizedReport.filter(peerPair => {
+          if (!(peer === peerPair[0] || peer === peerPair[1])) {
+            return true
+          }
+          console.log('deleted, bcause invalid: ', peer)
+
+          return false
+        })
+      }
     }
   }
 
