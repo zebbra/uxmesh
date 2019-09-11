@@ -23,7 +23,7 @@ function getLegendData(data) {
   return legendData
 }
 
-function buildLegend(data) {
+function buildLegend(data, myPeerId) {
   d3.select('#sidenav')
     .select('svg')
     .remove()
@@ -49,18 +49,34 @@ function buildLegend(data) {
     .attr('id', d => {
       return 'legend-text-' + d[0]
     })
-    .text(d => d[0].concat(': ', globalIdsWithSpeed[d[0]].speed, 'ms'))
+    .text(d => getLegendEntryText(d, myPeerId))
     .attr('transform', (d, i) => `translate(10, ${i * 25 + 10})`)
     .attr('class', 'regular-latency')
+}
+
+function getLegendEntryText(d, myPeerId) {
+  let peer = d[0]
+  let myPeer = 'peer' + myPeerId
+  let peerLabelText = peer.concat(': ', globalIdsWithSpeed[d[0]].speed, 'ms')
+
+  if (peer === myPeer) {
+    peerLabelText = peerLabelText.concat(' YOU')
+  }
+  return peerLabelText
 }
 
 function buildIdsWithSpeed(data) {
   let idsWithSpeed = {}
 
   getUniqIds(data).forEach(uniqId => {
+    let speed = 0
     data.forEach(peerPair => {
-      if (peerPair[0] === uniqId) idsWithSpeed[uniqId] = { speed: peerPair[2] }
+      if (peerPair[0] === uniqId || peerPair[1] === uniqId) {
+        speed = (speed + peerPair[2]) / 2
+      }
     })
+
+    idsWithSpeed[uniqId] = { speed: Math.round(speed) }
   })
 
   globalIdsWithSpeed = idsWithSpeed

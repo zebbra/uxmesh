@@ -121,6 +121,7 @@ svg .values text {
 .app {
     text-align: center;
     font-family: monospace;
+    padding-left: 180px;
 }
 
 .common {

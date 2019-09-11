@@ -69,6 +69,8 @@
   let globalColors = {};
   let globalIdsWithSpeed = {};
 
+  let myPeerId = ''
+
   function setupEventListener() {
     source.addEventListener(
             'event',
@@ -76,13 +78,15 @@
               //listen to updates from the server
               const receivedData = JSON.parse(evt.data)
 
+              myPeerId = localStorage.getItem('myPeerId')
+
               data = JSON.parse(receivedData)
 
               localStorage.setItem('peerDataFromBackend', JSON.stringify(data))
 
               generateColors(data)
               buildIdsWithSpeed(data)
-              buildLegend(data)
+              buildLegend(data, myPeerId)
 
               d3.select('#waitingForData').remove()
               d3.select('#chart')
@@ -102,13 +106,12 @@
   setupEventListener();
   generateColors(data);
   buildIdsWithSpeed(data);
-  buildLegend(data);
+  buildLegend(data, myPeerId);
 
 </script>
 <script src="script.js"></script>
 <script src="bubble.js"></script>
 <script src="realtime.js"></script>
-<!--<script src="/js/bundle.js"></script>-->
 
 </body>
 </html>

@@ -39,7 +39,23 @@ module.exports = class DataChannel {
 
   _initPeer(params) {
     this.config = {
+      config: {
+        iceServers: [
+          {
+            urls: 'turn:numb.viagenie.ca',
+            username: 'cloedu@gmail.com',
+            credential: 'Cl4ud!087'
+          },
+          {
+            urls: 'turn:numb.viagenie.ca',
+            username: 'cloedu@gmail.com',
+            credential: 'Cl4ud!087'
+          }
+        ]
+      },
       initiator: params.initiator,
+      reconnectTimer: 100,
+      // iceTransportPolicy: 'relay',
       trickle: useTrickle,
       //channelName: process.argv[3],
       channelConfig: {
@@ -178,10 +194,6 @@ module.exports = class DataChannel {
     })
     this.peer.on('close', data => {
       console.log('close???')
-      this.shutdown()
-    })
-    this.peer.on('error', error => {
-      console.log('error on peer connection', error)
       this.shutdown()
     })
     peers[this.peerId] = this.peer

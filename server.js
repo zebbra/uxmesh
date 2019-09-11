@@ -52,17 +52,15 @@ serverPolling()
 
 //and the magic goes on...
 io.on('connection', socket => {
-  console.log('clientIP', socket.handshake.address)
   socklist[socket.id] = {
     id: ++socketCounter, // _.keys(socklist).length
     active: true,
-    stats: {},
-    clientIp: socket.handshake.address
+    stats: {}
   }
   socklist_reverse[socklist[socket.id].id] = socket.id
 
   debug('Connection with ID:', socklist[socket.id].id)
-  //console.log(io.sockets.connected)
+
   const peersToAdvertise = _.chain(io.sockets.connected)
     .values()
     .filter(s => {
@@ -101,7 +99,9 @@ io.on('connection', socket => {
 
     socket2.emit('signal', {
       signal: data.signal,
-      peerId: socklist[socket.id].id //socket.id
+      peerId: socklist[socket.id].id, //socket.id
+      sourceSocketId: socket2.id,
+      sourcePeerId: socklist[socket2.id].id
     })
   })
 
@@ -162,7 +162,6 @@ function serverPolling() {
         const rep = report[stat.channel]
 
         if (stat.initiator) {
-          rep.clientIp = sock.clientIp
           rep.from = sock.id
           rep.to = stat.peerId
           rep.speed = stat.speed
@@ -193,84 +192,6 @@ function serverPolling() {
       data.push(dataEntry2)
     })
 
-    //mocked Data for testing
-    // let data = [
-    //     ['peer1', 'peer2', 232],
-    //     ['peer1', 'peer3', 323],
-    //     ['peer1', 'peer4', 324],
-    //     ['peer1', 'peer5', 123],
-    //     ['peer1', 'peer6', 434],
-    //     ['peer1', 'peer7', 135],
-    //     ['peer1', 'peer8', 335],
-    //     ['peer1', 'peer9', 332],
-    //     ['peer2', 'peer1', 232],
-    //     ['peer2', 'peer3', 34],
-    //     ['peer2', 'peer4', 21],
-    //     ['peer2', 'peer5', 67],
-    //     ['peer2', 'peer6', 11],
-    //     ['peer2', 'peer7', 12],
-    //     ['peer2', 'peer8', 67],
-    //     ['peer2', 'peer9', 69],
-    //     ['peer3', 'peer1', 553],
-    //     ['peer3', 'peer2', 47],
-    //     ['peer3', 'peer4', 89],
-    //     ['peer3', 'peer5', 46],
-    //     ['peer3', 'peer6', 22],
-    //     ['peer3', 'peer7', 31],
-    //     ['peer3', 'peer8', 48],
-    //     ['peer3', 'peer9', 22],
-    //     ['peer4', 'peer1', 332],
-    //     ['peer4', 'peer2', 62],
-    //     ['peer4', 'peer3', 23],
-    //     ['peer4', 'peer5', 57],
-    //     ['peer4', 'peer6', 62],
-    //     ['peer4', 'peer7', 46],
-    //     ['peer4', 'peer8', 98],
-    //     ['peer4', 'peer9', 97],
-    //     ['peer5', 'peer1', 443],
-    //     ['peer5', 'peer2', 32],
-    //     ['peer5', 'peer3', 34],
-    //     ['peer5', 'peer4', 56],
-    //     ['peer5', 'peer6', 34],
-    //     ['peer5', 'peer7', 77],
-    //     ['peer5', 'peer8', 45],
-    //     ['peer5', 'peer9', 43],
-    //     ['peer6', 'peer1', 765],
-    //     ['peer6', 'peer2', 15],
-    //     ['peer6', 'peer3', 66],
-    //     ['peer6', 'peer4', 44],
-    //     ['peer6', 'peer5', 73],
-    //     ['peer6', 'peer7', 43],
-    //     ['peer6', 'peer8', 78],
-    //     ['peer6', 'peer9', 35],
-    //     ['peer7', 'peer1', 453],
-    //     ['peer7', 'peer2', 34],
-    //     ['peer7', 'peer3', 12],
-    //     ['peer7', 'peer4', 67],
-    //     ['peer7', 'peer5', 85],
-    //     ['peer7', 'peer6', 45],
-    //     ['peer7', 'peer8', 63],
-    //     ['peer7', 'peer9', 23],
-    //     ['peer8', 'peer1', 453],
-    //     ['peer8', 'peer2', 13],
-    //     ['peer8', 'peer3', 43],
-    //     ['peer8', 'peer4', 54],
-    //     ['peer8', 'peer5', 67],
-    //     ['peer8', 'peer6', 74],
-    //     ['peer8', 'peer7', 23],
-    //     ['peer8', 'peer9', 25],
-    //     ['peer9', 'peer1', 544],
-    //     ['peer9', 'peer2', 54],
-    //     ['peer9', 'peer3', 87],
-    //     ['peer9', 'peer4', 94],
-    //     ['peer9', 'peer5', 44],
-    //     ['peer9', 'peer6', 36],
-    //     ['peer9', 'peer7', 23],
-    //     ['peer9', 'peer8', 25]
-    // ];
-
-    //as we generate the report in this interval, we spread it to our subscribers with the emitter.publish function
-
     data = data.filter(element => {
       return (
         element[0].indexOf('undefined') === -1 &&
@@ -279,11 +200,13 @@ function serverPolling() {
       )
     })
 
-    // if (!isDatareportConsistent(data)) {
-    // console.log('data report inonsistent, sanitizing...')
-    //data = sanitize(data)
-    // }
-
+    if (!isDatareportConsistent(data)) {
+      console.log(
+        'data report inonsistent, broken peers in the network. no data will be sent to clients. sanitizing necessary....'
+      )
+      data = sanitize(data)
+    }
+    //as we generate the report in this interval, we spread it to our subscribers with the emitter.publish function
     emitter.publish(JSON.stringify(data))
     console.log('stats ', new Date(), '\n===========\n', data, '\n')
   } catch (e) {
@@ -293,50 +216,25 @@ function serverPolling() {
   setTimeout(serverPolling, 5000)
 }
 
-function sanitize(report) {
-  const amountOfPeers = getUniqIds(report).length
-
-  const exactAmountAPeerHasToOccure =
-    (amountOfPeers * amountOfPeers - amountOfPeers) / amountOfPeers
-
-  const flatReport = getFlatPeers(report)
-
-  let sanitizedReport = report
-
-  console.log('----- start sanitizing -----')
-  console.log('report to sanitize: ', report)
-  getUniqIds(report).forEach(peer => {
-    const peerOccurences =
-      _.sumBy(flatReport, flatPeer => {
-        if (flatPeer === peer) return 1
-        else return 0
-      }) / 2
-
-    console.log('peerOccurences: ', peerOccurences)
-
-    if (peerOccurences !== exactAmountAPeerHasToOccure) {
-      sanitizedReport = sanitizedReport.filter(peerPair => {
-        return !(peer === peerPair[0] || peer === peerPair[1])
-      })
-    }
-  })
-  console.log('----- end sanitizing -----')
-  console.log('amountOfPeers: ', amountOfPeers)
-  console.log('exactAmountAPeerHasToOccure: ', exactAmountAPeerHasToOccure)
-  console.log('sanitizedReport: ', sanitizedReport)
-  return sanitizedReport
-}
-
 function isDatareportConsistent(report) {
   if (report) {
-    const amountOfPeers = getUniqIds(report).length
-    const sizeOfReport = report.length
+    const amountOfPeers = getAmountOfPeers(report)
 
-    console.log('amountOfPeers', amountOfPeers)
-    console.log('sizeOfReport', sizeOfReport)
-    return amountOfPeers * amountOfPeers - amountOfPeers === sizeOfReport
+    return getExpectedLengthOfReport(amountOfPeers) === report.length
   }
   return false
+}
+
+function getAmountOfPeers(report) {
+  return getUniqIds(report).length
+}
+
+function getExpectedLengthOfReport(amountOfPeers) {
+  return amountOfPeers * amountOfPeers - amountOfPeers
+}
+
+function getExactAmountAPeerHasToOccure(amountOfPeers) {
+  return (amountOfPeers * amountOfPeers - amountOfPeers) / amountOfPeers
 }
 
 function getUniqIds(data) {
@@ -349,4 +247,33 @@ function getFlatPeers(data) {
   return [].concat(...data).filter(item => {
     return parseInt(item) != item //get rid of last column which contains only numbers, we just need to proceed with the string-id's
   })
+}
+
+function sanitize(report) {
+  const uniqIds = getUniqIds(report)
+
+  let sanitizedReport = report
+
+  for (let peer of uniqIds) {
+    if (!isDatareportConsistent(sanitizedReport)) {
+      const exactAmountAPeerHasToOccure = getExactAmountAPeerHasToOccure(
+        getAmountOfPeers(sanitizedReport)
+      )
+      const flatReport = getFlatPeers(sanitizedReport)
+
+      const peerOccurences =
+        _.sumBy(flatReport, flatPeer => {
+          if (flatPeer === peer) return 1
+          else return 0
+        }) / 2 // we check for 1/2 because, each peer appears twice in the report
+
+      if (peerOccurences < exactAmountAPeerHasToOccure) {
+        sanitizedReport = sanitizedReport.filter(peerPair => {
+          return !(peer === peerPair[0] || peer === peerPair[1])
+        })
+      }
+    }
+  }
+
+  return sanitizedReport
 }

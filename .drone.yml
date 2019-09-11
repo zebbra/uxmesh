@@ -19,7 +19,7 @@ name: release
 
 trigger:
   event: [push]
-  branch: [uxmesh-goes-k8s, master]
+  branch: [uxmesh-hotfix]
 
 depends_on:
   - test
