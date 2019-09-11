@@ -275,7 +275,6 @@ function sanitize(report) {
     if (peerOccurences !== exactAmountAPeerHasToOccure) {
       sanitizedReport.forEach(peerPair => {
         if (peer === peerPair[0] || peer === peerPair[1]) {
-          cleanUp(peer)
           console.log('deleted, bcause invalid: ', peer)
         }
         peersToKill.push(peer)
@@ -303,7 +302,6 @@ function killPeers(peersToKill) {
     if (socketToKill) {
       socketToKill.emit('kill')
       delete socklist[sockId]
-      cleanUp(peerIdToKill)
     }
   })
 }
