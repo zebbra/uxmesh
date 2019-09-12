@@ -12,7 +12,7 @@ this.myPeerId = undefined
 
 function getConnectionUrl() {
   if (iAmOnTheServer()) {
-    return '' //for this showcase we don't need a predefined uxmesh-server for the client
+    return 'https://uxmesh.k8s.zebbra.ch' //for this showcase we don't need a predefined uxmesh-server for the client
   } else {
     const urlParams = new URLSearchParams(window.location.search)
     return urlParams.get('connectionUrl') || 'http://localhost:3001'

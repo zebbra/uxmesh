@@ -72,11 +72,11 @@ function buildIdsWithSpeed(data) {
     let speed = 0
     data.forEach(peerPair => {
       if (peerPair[0] === uniqId || peerPair[1] === uniqId) {
-        speed = (speed + peerPair[2]) / 2
+        speed += peerPair[2]
       }
     })
 
-    idsWithSpeed[uniqId] = { speed: Math.round(speed) }
+    idsWithSpeed[uniqId] = { speed: Math.round(speed / 2) }
   })
 
   globalIdsWithSpeed = idsWithSpeed

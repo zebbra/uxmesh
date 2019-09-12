@@ -179,12 +179,12 @@ function serverPolling() {
       let dataEntry1 = [
         'peer' + filteredReportElement.from,
         'peer' + filteredReportElement.to,
-        Math.max(1, Math.round(filteredReportElement.avgRoundtrip))
+        Math.max(1, Math.round(filteredReportElement.avgRoundtrip) + 5)
       ] //, reportElement.speed, reportElement.channel, reportElement.lost, reportElement.relayed];
       let dataEntry2 = [
         'peer' + filteredReportElement.to,
         'peer' + filteredReportElement.from,
-        Math.max(1, Math.round(filteredReportElement.avgRoundtrip))
+        Math.max(1, Math.round(filteredReportElement.avgRoundtrip) + 5)
       ] //, reportElement.speed, reportElement.channel, reportElement.lost, reportElement.relayed];
       data.push(dataEntry1)
       data.push(dataEntry2)
