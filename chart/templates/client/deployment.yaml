@@ -17,6 +17,8 @@ spec:
         app.kubernetes.io/name: {{ include "uxmesh.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/component: client
+      annotations:
+        co.elastic.logs/enabled: 'false'
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
